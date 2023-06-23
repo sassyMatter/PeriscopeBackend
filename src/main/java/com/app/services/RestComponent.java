@@ -18,6 +18,8 @@ public class RestComponent implements CodeComponent {
     private final String requestUrl;
     private final String apiType;
     private final String httpMethod;
+
+    // should have a list of method names and their return value
     private final String methodName;
 
     public RestComponent(String url, String type, Map<String, String> headers,
@@ -31,6 +33,7 @@ public class RestComponent implements CodeComponent {
         this.apiType = apiType;
         this.httpMethod = httpMethod;
         this.methodName = methodName;
+
     }
 
     @Override
