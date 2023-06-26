@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -36,6 +37,9 @@ public class CanvasController {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    KafkaAdmin kafkaAdmin;
 
     @PostMapping("/post-canvas-data")
     public Response PostCanvasData(@RequestBody CanvasData data){
@@ -146,6 +150,15 @@ public class CanvasController {
                 .build();
 
         databaseComponent.generateCode();
+
+        log.info("Creating queue component...");
+        QueueComponent queueComponent = QueueComponent
+                .builder()
+                .topic("TestQueue")
+                .kafkaAdmin(kafkaAdmin)
+                .build();
+        log.info("Queue component {} ", queueComponent);
+        queueComponent.configureQueue();
 
         Response res = Response.builder().response(generatedCode + "\n\n\n\n" + functionCode).build();
         return res;

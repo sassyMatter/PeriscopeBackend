@@ -16,14 +16,19 @@ public class FunctionComponent implements CodeComponent {
     private final String functionBody;
     private final String functionName;
 
+    // function type : computation, listener, producer
+    private final String functionType;
+
+
     // there will be complex method too, where dependencies and import would be required,
     // we will look into it later
 
-    public FunctionComponent(Map<String, String> parameters, String returnType, String functionBody, String functionName) {
+    public FunctionComponent(Map<String, String> parameters, String returnType, String functionBody, String functionName, String functionType) {
         this.parameters = parameters;
         this.returnType = returnType;
         this.functionBody = functionBody;
         this.functionName = functionName;
+        this.functionType = functionType;
     }
 
     @Override

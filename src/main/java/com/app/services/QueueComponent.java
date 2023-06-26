@@ -1,5 +1,7 @@
 package com.app.services;
 
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateTopicsOptions;
@@ -12,12 +14,15 @@ import java.util.Collections;
 import java.util.Map;
 
 @Component
+@Builder
+@NoArgsConstructor(force = true)
 public class QueueComponent {
 
+    @Autowired
     private final KafkaAdmin kafkaAdmin;
     private final String topic;
 
-    @Autowired
+
     public QueueComponent(KafkaAdmin kafkaAdmin,  String topic) {
         this.kafkaAdmin = kafkaAdmin;
         this.topic = topic;
