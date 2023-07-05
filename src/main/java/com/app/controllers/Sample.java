@@ -3,12 +3,11 @@ package com.app.controllers;
 
 
 import com.app.models.Response;
-import com.app.producers.TestProducer;
+import com.app.producers.KafkaProducer;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.gson.GsonAutoConfiguration;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class Sample {
 
     @Autowired
-    TestProducer testProducer;
+    KafkaProducer testProducer;
 
     @Autowired
     Gson gson;

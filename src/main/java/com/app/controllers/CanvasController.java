@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaAdmin;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -40,6 +41,9 @@ public class CanvasController {
 
     @Autowired
     KafkaAdmin kafkaAdmin;
+
+    @Autowired
+    KafkaTemplate kafkaTemplate;
 
     @PostMapping("/post-canvas-data")
     public Response PostCanvasData(@RequestBody CanvasData data){
@@ -159,6 +163,8 @@ public class CanvasController {
                 .build();
         log.info("Queue component {} ", queueComponent);
         queueComponent.configureQueue();
+
+
 
         Response res = Response.builder().response(generatedCode + "\n\n\n\n" + functionCode).build();
         return res;
