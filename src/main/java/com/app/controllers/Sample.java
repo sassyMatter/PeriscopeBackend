@@ -33,7 +33,7 @@ public class Sample {
         Response response = new Response();
         response.setResponse("Hello, Connected to server New");
 
-        testProducer.sendMessage("testTopic", gson.toJson(response));
+//        testProducer.sendMessage("testTopic", gson.toJson(response));
         return response;
     }
 

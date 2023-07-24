@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 @ToString
 @NoArgsConstructor
@@ -55,4 +56,32 @@ public class CanvasObject {
     public String src;
     public CanvasObject crossOrigin;
     public ArrayList<CanvasObject> filters;
+
+    // custom parameters
+
+//    function
+    public Map<String, String> parameters;
+    public String returnType;
+    public String functionBody;
+    public String functionName;
+    public String topic;
+    public String deserializationClass;
+    public String functionType;
+
+//   database
+    public ArrayList<String> tableNames;
+    public ArrayList<String> tableDefinitions;
+
+//  Rest
+
+    public String url;
+    public Map<String, String> headers;
+    public Map<String, String> requestBody;
+    public String requestUrl;
+    public String apiType;
+    public String httpMethod;
+    public String methodName;
+
+
+
 }

@@ -44,10 +44,12 @@ public class FunctionComponent implements CodeComponent {
 
     @Override
     public String generateCode() {
-
+        log.info("generating function code {} ", functionType);
         switch(functionType) {
 
-            case "computation":
+
+            case "Vanilla":
+                log.info("generating code for functionType: {} ", functionType);
                 return generateVanillaFunction();
             case "consumer":
                 return generateConsumer();
@@ -71,12 +73,15 @@ public class FunctionComponent implements CodeComponent {
         codeBuilder.append("   public ");
         codeBuilder.append(returnType).append(" " + functionName).append("(");
         boolean isFirstParameter = true;
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            if (!isFirstParameter) {
-                codeBuilder.append(", ");
+
+        if (parameters != null) {
+            for (Map.Entry<String, String> entry : parameters.entrySet()) {
+                if (!isFirstParameter) {
+                    codeBuilder.append(", ");
+                }
+                codeBuilder.append(entry.getKey()).append(" ").append(entry.getValue());
+                isFirstParameter = false;
             }
-            codeBuilder.append(entry.getKey()).append(" ").append(entry.getValue());
-            isFirstParameter = false;
         }
         codeBuilder.append(") {").append("\n");
 
