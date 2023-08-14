@@ -15,6 +15,11 @@ import java.util.ListIterator;
 @Slf4j
 public class CodeWriterService {
 
+    /**
+     *
+     * @param input
+     * @param type
+     */
     public void writeToFile(String input, String type) {
         try {
 
@@ -52,6 +57,11 @@ public class CodeWriterService {
         }
     }
 
+    /**
+     *
+     * @param lines
+     * @return int
+     */
     private int findLastClosingBraceIndex(List<String> lines) {
         ListIterator<String> iterator = lines.listIterator(lines.size());
 

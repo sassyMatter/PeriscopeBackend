@@ -19,15 +19,14 @@ public class Converter {
 
 
 
-    @Autowired
-    private CustomCodeService myService;
 
-    @PostMapping("/testConfiguration")
-    public ResponseEntity<?> StaticNameForEndpoint() {
-        // Process the request and perform desired operations
-        // ...
-        myService.testConfiguration();
-        return ResponseEntity.ok().build();
-    }
+
+
+
+
+
+
+
+  
 
 }

@@ -1,17 +1,15 @@
 package com.app.repository;
 
 
-
-import com.app.models.test.User;
+import com.app.models.account.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
+import java.util.Optional;
 
+public interface UserRepository extends MongoRepository<User, String> {
+    Optional<User> findByUsername(String username);
 
+    Boolean existsByUsername(String username);
 
-
-public interface UserRepository extends MongoRepository<User,String>{
-    User save(User user);
-    List<User> findAll();
+    Boolean existsByEmail(String email);
 }

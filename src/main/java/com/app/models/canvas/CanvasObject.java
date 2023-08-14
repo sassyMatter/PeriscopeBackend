@@ -1,5 +1,9 @@
 package com.app.models.canvas;
 
+import com.app.utils.MapDeserializer;
+import com.app.utils.MapSerializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -59,8 +63,17 @@ public class CanvasObject {
 
     // custom parameters
 
+//    input
+    @JsonDeserialize(using = MapDeserializer.class)
+    @JsonSerialize(using = MapSerializer.class)
+    public Map<String, String> customTypes;
+
 //    function
+
+    @JsonDeserialize(using = MapDeserializer.class)
+    @JsonSerialize(using = MapSerializer.class)
     public Map<String, String> parameters;
+
     public String returnType;
     public String functionBody;
     public String functionName;
@@ -75,8 +88,15 @@ public class CanvasObject {
 //  Rest
 
     public String url;
+
+    @JsonDeserialize(using = MapDeserializer.class)
+    @JsonSerialize(using = MapSerializer.class)
     public Map<String, String> headers;
+
+    @JsonDeserialize(using = MapDeserializer.class)
+    @JsonSerialize(using = MapSerializer.class)
     public Map<String, String> requestBody;
+
     public String requestUrl;
     public String apiType;
     public String httpMethod;

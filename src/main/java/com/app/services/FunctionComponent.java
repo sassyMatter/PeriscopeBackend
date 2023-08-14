@@ -23,7 +23,7 @@ public class FunctionComponent implements CodeComponent {
 
 
     // to be used for converting to and from json
-    private final String deserializationClass;
+    private String deserializationClass;
 
     // function type : computation, listener, producer
     private final String functionType;
@@ -51,7 +51,7 @@ public class FunctionComponent implements CodeComponent {
             case "Vanilla":
                 log.info("generating code for functionType: {} ", functionType);
                 return generateVanillaFunction();
-            case "consumer":
+            case "Consumer":
                 return generateConsumer();
             case "producer":
                 // later can be changed, for now the scoped function inside
@@ -73,13 +73,13 @@ public class FunctionComponent implements CodeComponent {
         codeBuilder.append("   public ");
         codeBuilder.append(returnType).append(" " + functionName).append("(");
         boolean isFirstParameter = true;
-
+        log.info("parameters:: {} ", parameters);
         if (parameters != null) {
             for (Map.Entry<String, String> entry : parameters.entrySet()) {
                 if (!isFirstParameter) {
                     codeBuilder.append(", ");
                 }
-                codeBuilder.append(entry.getKey()).append(" ").append(entry.getValue());
+                codeBuilder.append(entry.getValue()).append(" ").append(entry.getKey());
                 isFirstParameter = false;
             }
         }
@@ -100,17 +100,18 @@ public class FunctionComponent implements CodeComponent {
 
 
     private String generateConsumer() {
+//        this.deserializationClass = "CustomType";
         StringBuilder codeBuilder = new StringBuilder();
 
         // Append annotations
-        codeBuilder.append("@KafkaListener(topics = \"").append(topic).append(")").append("\n");
+        codeBuilder.append("@KafkaListener(topics = \"").append(topic + "\"").append(")").append("\n");
 
         // Append method signature
         codeBuilder.append("public void process").append(toCamelCase(topic)).append("(String ")
                 .append(toCamelCase(topic)).append("JSON)").append(" {").append("\n");
 
         // Append logging statement
-        codeBuilder.append("    logger.info(\"received content = '{}'\", ").append(toCamelCase(topic)).append("JSON);")
+        codeBuilder.append("    log.info(\"received content = '{}'\", ").append(toCamelCase(topic)).append("JSON);")
                 .append("\n");
 
         // Append try-catch block for deserialization
@@ -120,11 +121,11 @@ public class FunctionComponent implements CodeComponent {
                 .append(" = mapper.readValue(").append(toCamelCase(topic)).append("JSON, ")
                 .append(deserializationClass).append(".class);").append("\n");
         codeBuilder.append("        // Add your custom processing logic here").append("\n");
-        codeBuilder.append("        logger.info(\"Success process ").append(toCamelCase(topic))
-                .append(" '{}' with topic '{}'\", ").append(toCamelCase(topic)).append(".getBrandName(), \"")
-                .append(topic).append("\");").append("\n");
+        codeBuilder.append("        log.info(\"Success parsing received object ")
+                .append(" '{}' with topic '{}'\", ").append(toCamelCase(topic))
+                .append(");").append("\n");
         codeBuilder.append("    } catch (Exception e) {").append("\n");
-        codeBuilder.append("        logger.error(\"An error occurred! '{}'\", e.getMessage());").append("\n");
+        codeBuilder.append("        log.error(\"An error occurred! '{}'\", e.getMessage());").append("\n");
         codeBuilder.append("    }").append("\n");
 
         codeBuilder.append("}").append("\n");
@@ -138,6 +139,7 @@ public class FunctionComponent implements CodeComponent {
         for (int i = 1; i < words.length; i++) {
             camelCaseBuilder.append(words[i].substring(0, 1).toUpperCase()).append(words[i].substring(1).toLowerCase());
         }
+
         return camelCaseBuilder.toString();
     }
 
