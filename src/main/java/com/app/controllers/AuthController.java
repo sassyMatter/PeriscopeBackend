@@ -26,9 +26,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -61,9 +59,17 @@ public class AuthController {
         String jwt = jwtUtils.generateJwtToken(authentication);
 
         User userDetails = (User) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
+//        List<String> roles = userDetails.getAuthorities().stream()
+//                .filter(Objects::nonNull)
+//                .map(item -> item.getAuthority())
+//                .collect(Collectors.toList());
+
+        List<String> roles = userDetails.getAuthorities() != null
+                ? userDetails.getAuthorities().stream()
+                .filter(Objects::nonNull)
                 .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
+                .collect(Collectors.toList())
+                : Collections.emptyList();
 
         return ResponseEntity.ok(new JwtResponse(jwt,
                 userDetails.getId(),

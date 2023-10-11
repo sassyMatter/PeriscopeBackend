@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@CrossOrigin(origins="*" , allowedHeaders = "*")
+@CrossOrigin(origins="*")
 @RequestMapping("/hello" )
 @Slf4j
 public class Sample {

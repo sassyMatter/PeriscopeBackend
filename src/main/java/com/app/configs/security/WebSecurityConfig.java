@@ -1,6 +1,7 @@
 package com.app.configs.security;
 
 import com.app.services.UserDetailsServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableMethodSecurity
+@Slf4j
 public class WebSecurityConfig {
     @Autowired
     UserDetailsServiceImpl userDetailsService;
@@ -53,6 +55,8 @@ public class WebSecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors();
+        log.info("Filter Chain websecurity config");
         http.authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/api/auth/**").permitAll()
                         .antMatchers("/api/test/**").permitAll().anyRequest().authenticated())
