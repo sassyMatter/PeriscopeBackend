@@ -1,6 +1,7 @@
 package com.app.models.account;
 
 
+import com.app.models.Project;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
@@ -38,6 +39,9 @@ public class User implements UserDetails {
 
     @DBRef
     private Set<Role> roles = new HashSet<>();
+
+    @DBRef
+    private Set<Project> projects = new HashSet<>();
 
 
 

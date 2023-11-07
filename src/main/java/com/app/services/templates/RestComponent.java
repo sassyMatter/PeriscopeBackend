@@ -1,4 +1,4 @@
-package com.app.services;
+package com.app.services.templates;
 
 import com.app.services.interfaces.CodeComponent;
 import lombok.Builder;

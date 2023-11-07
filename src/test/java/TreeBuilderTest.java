@@ -2,12 +2,11 @@ import com.app.models.canvas.CanvasData;
 import com.app.models.canvas.CanvasObject;
 import com.app.models.canvas.Connection;
 import com.app.models.canvasSchema.TreeNode;
-import com.app.services.TreeBuilderService;
+import com.app.services.core.TreeBuilderService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;

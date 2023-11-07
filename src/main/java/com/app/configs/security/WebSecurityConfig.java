@@ -1,6 +1,6 @@
 package com.app.configs.security;
 
-import com.app.services.UserDetailsServiceImpl;
+import com.app.services.core.UserDetailsServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package com.app.services;
+package com.app.services.core;
 
 import com.app.controllers.Converter;
 import lombok.extern.slf4j.Slf4j;

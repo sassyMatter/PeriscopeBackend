@@ -1,4 +1,4 @@
-package com.app.services;
+package com.app.services.templates;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;

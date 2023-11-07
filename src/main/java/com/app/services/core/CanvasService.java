@@ -1,4 +1,4 @@
-package com.app.services;
+package com.app.services.core;
 
 import com.app.models.canvas.CanvasData;
 import com.app.repository.CanvasRepository;
