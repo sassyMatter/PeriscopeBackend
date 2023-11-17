@@ -5,6 +5,8 @@ import com.app.models.account.User;
 import com.app.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +28,16 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
         log.info("Valid account:: {} ", user.isAccountNonExpired());
         return user;
+    }
+
+
+    // in multi-threaded environment me might face issue with Security Context holder , do we?
+    public String getCurrentUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "007";
+        }
+        return authentication.getName();
     }
 
 }

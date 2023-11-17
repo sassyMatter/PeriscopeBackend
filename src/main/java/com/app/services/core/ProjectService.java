@@ -9,8 +9,10 @@ import com.app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class DataService {
+public class ProjectService {
     @Autowired
     private UserRepository userRepository;
 
@@ -51,12 +53,13 @@ public class DataService {
 
     // Update a project, including canvasData and other properties
     public Project updateProject(Project updatedProject) {
-        // Find the existing project in the database by its ID
+        // Find the existing project in the database by its ID, id could be null
+        // place null check
         Project existingProject = projectRepository.findById(updatedProject.getId()).orElse(null);
 
         if (existingProject != null) {
             // Update project properties
-            existingProject.setName(updatedProject.getName());
+            existingProject.setProjectName(updatedProject.getProjectName());
 //            existingProject.setDescription(updatedProject.getDescription());
             // Update other project properties as needed
 
@@ -76,6 +79,11 @@ public class DataService {
         return null;
     }
 
+
+    public List<Project> getALlProjects(){
+        return projectRepository.findAll();
+    }
+
     /**
      *
      * @param projectId
@@ -84,6 +92,7 @@ public class DataService {
 
     // Read a project by ID
     public Project getProjectById(String projectId) {
+
         return projectRepository.findById(projectId).orElse(null);
     }
 
@@ -93,6 +102,7 @@ public class DataService {
      */
     // Delete a project
     public void deleteProject(String projectId) {
+
         projectRepository.deleteById(projectId);
     }
 
@@ -103,6 +113,7 @@ public class DataService {
      */
     // Create canvasData
     public CanvasData createCanvasData(CanvasData canvasData) {
+
         return canvasDataRepository.save(canvasData);
     }
 
@@ -113,11 +124,13 @@ public class DataService {
 
     // Update canvasData
     public CanvasData updateCanvasData(CanvasData canvasData) {
+
         return canvasDataRepository.save(canvasData);
     }
 
     // Delete canvasData
     public void deleteCanvasData(String canvasDataId) {
+
         canvasDataRepository.deleteById(canvasDataId);
     }
 }

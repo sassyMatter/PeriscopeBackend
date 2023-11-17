@@ -17,14 +17,18 @@ public class Project {
     private String id;
 
 
-    private String name;
+    private String projectName;
 
 //  For now storing just one image
     private String imageURL;
 
     private String sourceDir;
 
+    private Configurations configurations;
+
     private String sourceDirName;
+
+    private boolean isRunning;
 
 
     @DBRef
