@@ -168,9 +168,11 @@ public class ProjectService {
 
 
     public Project findProjectIdAndUser(String username, String Id) {
+
         User user = userRepository.findByUsername(username).orElse(null);
         log.info("User is {} ", user);
         if (user != null) {
+
             return user.getProjects()
                     .stream()
                     .filter(project -> project.getId().equals(Id))
