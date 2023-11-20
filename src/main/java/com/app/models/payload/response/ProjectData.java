@@ -10,6 +10,8 @@ import lombok.Setter;
 @Setter
 public class ProjectData {
 
+    public String id;
+
     public String projectName;
 
     public String imageUrl;
