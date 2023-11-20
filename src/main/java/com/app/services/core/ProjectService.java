@@ -105,7 +105,9 @@ public class ProjectService {
      */
     // Delete a project
     public void deleteProject(String projectId) {
-
+        // find user and User object
+        // delete project reference and
+        // finally delete the project
         projectRepository.deleteById(projectId);
     }
 
@@ -150,7 +152,7 @@ public class ProjectService {
             Project savedProject =  projectRepository.save(project);
             // Add the project to the user's list of projects
             user.getProjects().add(savedProject);
-            userRepository.save(user);
+//            userRepository.save(user);
 
             // Save the project
             return savedProject;
@@ -178,15 +180,15 @@ public class ProjectService {
         return null;
     }
 
-    public void updateProjectState(String userName, String projectId, Project newProjectState) {
+    public Project updateProjectState(String userName, String projectId, Project newProjectState) {
         // Find the user
         Optional<User> user = userRepository.findByUsername(userName);
         if(!user.isPresent()){
             // raise exception and catch it to throw error
         }
-        Optional<User> optionalUser = userRepository.findById(user.get().getId());
-        if (optionalUser.isPresent()) {
-            User existingUser = optionalUser.get();
+//        Optional<User> optionalUser = userRepository.findById(user.get().getId());
+        if (user.isPresent()) {
+            User existingUser = user.get();
             // Find the project within the user's projects
             Optional<Project> optionalProject = existingUser.getProjects().stream()
                     .filter(project -> project.getId().equals(projectId))
@@ -204,8 +206,9 @@ public class ProjectService {
                 // Update other properties as needed
 
                 // Save the updated project
-                projectRepository.save(existingProject);
+              return  projectRepository.save(existingProject);
             }
         }
+        return null;
     }
 }

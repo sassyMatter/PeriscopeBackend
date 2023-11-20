@@ -71,6 +71,7 @@ public class UserSpaceController {
 //        Project project = projectMapper.mapProjectDataToProject(projectData);
 
         String userName = userDetailsService.getCurrentUsername();
+        Project updatedProject = null;
         log.info("UserName :: {} ", userName);
         Project existingProject = projectService.findProjectIdAndUser(userName, project.getId());
 
@@ -78,14 +79,14 @@ public class UserSpaceController {
         if (existingProject != null) {
             // If the project already exists, update its state
             log.info("Updating the project ");
-            projectService.updateProjectState(userName, existingProject.getId(), project);
+          updatedProject =   projectService.updateProjectState(userName, existingProject.getId(), project);
         } else {
             // If the project doesn't exist, create and save a new project
-            Project savedProject = projectService.createProjectForUser(userName, project);
+//            Project savedProject = projectService.createProjectForUser(userName, project);
             // put null check for saved project
             return MetaDataResponse.<Project>
                             builder()
-                    .data(savedProject)
+//                    .data(savedProject)
                     .httpStatus(HttpStatus.OK)
                     .messageCode("Created Project for User")
                     .build();
@@ -93,7 +94,7 @@ public class UserSpaceController {
 
         return MetaDataResponse.<Project>
                         builder()
-                .data(existingProject)
+                .data(updatedProject)
                 .httpStatus(HttpStatus.OK)
                 .messageCode("Updated Project State")
                 .build();
