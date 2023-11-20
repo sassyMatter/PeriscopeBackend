@@ -34,40 +34,26 @@ public class UserSpaceController {
     @Autowired
     private ProjectMapper projectMapper;
 
+
+
+
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
     @GetMapping("/get-all-projects")
-    public MetaDataResponse<List<ProjectData>> getAllProjects() {
+    public MetaDataResponse<List<Project>> getAllProjects() {
         List<Project> allprojectsData = projectService.getALlProjects();
-        List<ProjectData> projectData = projectMapper.mapToProjectDataList(allprojectsData);
+//        List<ProjectData> projectData = projectMapper.mapToProjectDataList(allprojectsData);
 
 
-        return MetaDataResponse.<List<ProjectData>>
+        return MetaDataResponse.<List<Project>>
                         builder()
-                        .data(projectData)
+                        .data(allprojectsData)
                         .httpStatus(HttpStatus.OK)
                 .messageCode("SUCCESS")
                 .build();
     }
 
-    @PostMapping("/update-project")
-    public ResponseEntity<?> updateProject(@RequestBody Project project) {
-        Optional<Project> existingProject = projectRepository.findById(project.getId());
-        if (existingProject.isPresent()) {
-            // Update project properties
-            Project updatedProject = existingProject.get();
-            updatedProject.setProjectName(project.getProjectName());
-            updatedProject.setImageURL(project.getImageURL());
-            updatedProject.setConfigurations(project.getConfigurations());
-            // Update other properties as needed
-
-            projectRepository.save(updatedProject);
-            return ResponseEntity.ok("Project updated successfully");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
     @PostMapping("/load-project")
     public ResponseEntity<?> loadProject(@RequestBody ProjectData projectData) {
@@ -76,34 +62,40 @@ public class UserSpaceController {
         return ResponseEntity.ok("Project loaded successfully");
     }
 
-    @PostMapping("/create-new-project")
-    public MetaDataResponse<Project> createNewProject(@RequestBody ProjectData projectData) {
-        // Create a new project and save it to the database
-        Project project = projectMapper.mapProjectDataToProject(projectData);
-        // find user Id from userDetails service
+    // redundant
+
+
+    @PostMapping("/create-update-project")
+    public MetaDataResponse<Project> createOrUpdateProject(@RequestBody Project project) {
+        // Create a new project or update an existing project based on the project name
+//        Project project = projectMapper.mapProjectDataToProject(projectData);
 
         String userName = userDetailsService.getCurrentUsername();
-        Project savedProject = projectService.createProjectForUser(userName, project);
+        log.info("UserName :: {} ", userName);
+        Project existingProject = projectService.findProjectIdAndUser(userName, project.getId());
+
+        log.info("Existing project:: {} ", existingProject);
+        if (existingProject != null) {
+            // If the project already exists, update its state
+            log.info("Updating the project ");
+            projectService.updateProjectState(userName, existingProject.getId(), project);
+        } else {
+            // If the project doesn't exist, create and save a new project
+            Project savedProject = projectService.createProjectForUser(userName, project);
+            // put null check for saved project
+            return MetaDataResponse.<Project>
+                            builder()
+                    .data(savedProject)
+                    .httpStatus(HttpStatus.OK)
+                    .messageCode("Created Project for User")
+                    .build();
+        }
 
         return MetaDataResponse.<Project>
                         builder()
-                .data(savedProject)
+                .data(existingProject)
                 .httpStatus(HttpStatus.OK)
-                .messageCode("SUCCESS")
-                .build();
-    }
-
-    @PostMapping("/save-project")
-    public MetaDataResponse<String> saveProject(@RequestBody Project project) {
-
-        // Save the project to the database
-        projectRepository.save(project);
-
-        return MetaDataResponse.<String>
-                        builder()
-                .data("Project Saved Successfully")
-                .httpStatus(HttpStatus.OK)
-                .messageCode("SUCCESS")
+                .messageCode("Updated Project State")
                 .build();
     }
 

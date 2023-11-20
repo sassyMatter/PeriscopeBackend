@@ -20,6 +20,7 @@ public class ProjectMapper {
 
     public static ProjectData mapToProjectData(Project project) {
         ProjectData projectData = new ProjectData();
+        project.setId(project.getId());
         projectData.setProjectName(project.getProjectName());
         projectData.setImageUrl(project.getImageURL());
         projectData.setConfigurations(project.getConfigurations());
@@ -29,6 +30,7 @@ public class ProjectMapper {
 
     public Project mapProjectDataToProject(ProjectData projectData){
         Project project = new Project();
+        project.setId(projectData.getId());
         project.setProjectName(projectData.getProjectName());
         project.setConfigurations(projectData.getConfigurations());
         return project;
