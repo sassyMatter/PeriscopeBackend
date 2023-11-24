@@ -2,6 +2,7 @@ package com.app.services.core;
 
 import com.app.controllers.Converter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -15,12 +16,20 @@ import java.util.ListIterator;
 @Slf4j
 public class CodeWriterService {
 
+
+
+    @Value("${com.userSpace.targetParentDirectory}")
+    public static String targetParentDir;
+
     /**
+     * Now we will either write a controller,
+     * a service method
+     * or configuration: database initializer and Kafka configuration, parameterized them
      *
-     * @param input
-     * @param type
      */
     public void writeToFile(String input, String type) {
+
+
         try {
 
             String filePath = null;

@@ -11,11 +11,11 @@ public class BashScriptRunner {
 
 
     // source of template
-    @Value("${}")
+    @Value("${com.userSpace.templateDirectory}")
     public static String sourceDir;
 
     // parent directory
-    @Value("${}")
+    @Value("${com.userSpace.targetParentDirectory}")
     public static String targetParentDir;
 
 
@@ -45,9 +45,9 @@ public class BashScriptRunner {
             int exitCode = process.waitFor();
 
             if (exitCode == 0) {
-                System.out.println("Project creation success.");
+                System.out.println("Project Template creation success.");
             } else {
-                System.err.println("Project Creation failed with exit code " + exitCode);
+                System.err.println("Project Template Creation failed with exit code " + exitCode);
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
