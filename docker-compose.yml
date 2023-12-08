@@ -5,7 +5,7 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: 'periscope'
+      MYSQL_USER: 'root'
       MYSQL_PASSWORD: 'root'
       MYSQL_DATABASE: 'periscope'
       MYSQL_ROOT_HOST: '0.0.0.0'
@@ -51,3 +51,5 @@ services:
     image: moonbse/periscope-frontend
     ports:
       - "4200:80"
+    depends_on:
+      - spring-app
