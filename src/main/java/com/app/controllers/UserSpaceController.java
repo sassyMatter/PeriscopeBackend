@@ -58,13 +58,14 @@ public class UserSpaceController {
     @PostMapping("/load-project")
     public ResponseEntity<?> loadProject(@RequestBody ProjectData projectData) {
         // Load project based on provided ProjectData
+       
         // Implement logic to load project from the database
         return ResponseEntity.ok("Project loaded successfully");
+        // return projectService.loadProject(projectData);
     }
 
     // redundant
-
-
+   
     @PostMapping("/create-update-project")
     public MetaDataResponse<Project> createOrUpdateProject(@RequestBody Project project) {
         // Create a new project or update an existing project based on the project name
