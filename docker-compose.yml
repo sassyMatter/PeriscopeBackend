@@ -5,15 +5,15 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_USER: 'root'
-      MYSQL_PASSWORD: 'root'
+#      MYSQL_USER: 'root'
+#      MYSQL_PASSWORD: 'root'
       MYSQL_DATABASE: 'periscope'
       MYSQL_ROOT_HOST: '0.0.0.0'
     ports:
       - "3306:3306"
 
-  mongo:
-    image: mongo:latest
+  mongo-db:
+    image: mongo
     ports:
       - "27017:27017"
 
@@ -22,7 +22,7 @@ services:
     environment:
       KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
-      KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
+      KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:9093
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     ports:
@@ -36,20 +36,29 @@ services:
       - "2181:2181"
 
   spring-app:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-    image: moonbse/backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+#    image: moonbse/backend:latest
+    platform: linux/amd64
     depends_on:
       - kafka
       - mysql
-      - mongo
+      - mongo-db
     ports:
       - "8080:8080"
+#    network_mode: bridge
 
   angular-app:
-    image: moonbse/periscope-frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    image: moonbse/periscope-frontend:latest
+    platform: linux/amd64
     ports:
-      - "4200:80"
+      - "8085:80"
     depends_on:
       - spring-app
+    environment:
+      - NODE_ENV=production
