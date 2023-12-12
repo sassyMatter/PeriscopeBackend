@@ -18,3 +18,7 @@ com:
     jwt_secret: secretKeyforJWTAuthenticaitonLaterItWouldBeAEnvironmentVariable
     jwtExpirationTime: 8460000
 
+  userSpace:
+    templateDirectory: /Users/nirbhay11.singh/IdeaProjects/Template
+    targetParentDirectory: /Users/nirbhay11.singh/IdeaProjects/UserSpaceDirectory
+
