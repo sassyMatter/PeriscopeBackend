@@ -1,7 +1,6 @@
 package com.app.services.core;
 
 
-import com.app.models.account.User;
 import com.app.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
