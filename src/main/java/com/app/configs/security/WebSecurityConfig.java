@@ -59,6 +59,7 @@ public class WebSecurityConfig {
         log.info("Filter Chain websecurity config");
         http.authorizeHttpRequests(authorize -> authorize
                         .antMatchers("/api/auth/**").permitAll()
+//                        .antMatchers("/api/auth/sign-in/**").permitAll()
                         .antMatchers("/api/test/**").permitAll().anyRequest().authenticated())
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
