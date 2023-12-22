@@ -1,17 +1,14 @@
 version: '3.8'
 
 services:
-  mysql:
+  mysql-db:
     image: mysql:latest
-    container_name: mysql
+    container_name: mysql-db
     environment:
       MYSQL_ROOT_PASSWORD: root
-#      MYSQL_USER: 'root'
-#      MYSQL_PASSWORD: 'root'
       MYSQL_DATABASE: 'periscope'
-      MYSQL_ROOT_HOST: '0.0.0.0'
     ports:
-      - "3307:3307"
+      - "3306:3306"
 
   mongo-db:
     container_name: mongo-db
@@ -37,6 +34,7 @@ services:
   zookeeper:
     container_name: zookeeper
     image: wurstmeister/zookeeper:latest
+    platform: linux/amd64
     ports:
       - "2181:2181"
 
@@ -45,11 +43,11 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-#    image: moonbse/backend:latest
-    platform: linux/amd64docker stop
+    image: moonbse/backend:latest
+    platform: linux/amd64
     depends_on:
       - kafka
-      - mysql
+      - mysql-db
       - mongo-db
     ports:
       - "8080:8080"
