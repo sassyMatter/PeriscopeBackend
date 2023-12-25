@@ -55,18 +55,19 @@ services:
 
   angular-app:
     container_name: frontend
-    build:
-      context: .
-      dockerfile: Dockerfile
+#    build:
+#      context: .
+#      dockerfile: /Users/sangam.barnwal/Documents/Periscope/PeriscopeUI/Dockerfile
 
-    image: moonbse/periscope-frontend:latest
-#    image: moonbse/periscope_frontend_local:amd64_local
+#      image: moonbse/periscope-frontend:latest
+# image: moonbse/periscope_frontend_local:amd64_local
+     image: periscope/sangam_frontend_local:amd64_local
     platform: linux/amd64
     ports:
       - "8085:80"
     depends_on:
       - spring-app
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
 
 
