@@ -52,12 +52,15 @@ services:
     ports:
       - "8080:8080"
 #    network_mode: bridge
+    volumes:
+      - ${TEMPLATE_DIR}:/templates
+      - ${USER_SPACE_DIR}:/user-space-directory
 
   angular-app:
     container_name: frontend
-    build:
-      context: .
-      dockerfile: Dockerfile
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
 
     image: moonbse/periscope-frontend:latest
 #    image: moonbse/periscope_frontend_local:amd64_local
