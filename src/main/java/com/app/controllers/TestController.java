@@ -4,6 +4,7 @@ package com.app.controllers;
 
 import com.app.models.Project;
 import com.app.models.Response;
+import com.app.models.payload.response.MetaDataResponse;
 import com.app.producers.KafkaProducer;
 import com.app.services.ScriptService;
 import com.app.services.core.UserDetailsServiceImpl;
@@ -11,6 +12,7 @@ import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -42,12 +44,15 @@ public class TestController {
         return response;
     }
 
-    // create a user project with username from principle and copy template directory
-    // and start writing to it. Environment variables to the .env file.
-    // run some scripts on the template and get it up.
+
+    /**
+     * Method to test creation of templates
+     * @param project
+     * @return
+     */
 
     @PostMapping("/testing-template")
-    public Response testTemplate(@RequestBody Project project){
+    public MetaDataResponse testTemplate(@RequestBody Project project){
 
         String userName = userDetailsService.getCurrentUsername();
         log.info("creating project {} for userName: {} ", project.getProjectName(), userName);
@@ -55,13 +60,22 @@ public class TestController {
         // creating a random project dir name using project counts of user and projectName,
         // for now using only projectName
         String dirName = userName + "-" + project.getProjectName();
-        scriptService.createUserProjectDirectory(dirName);
+        int result = scriptService.createUserProjectDirectory(dirName);
 
-
-
-
-
-        return null;
+        if (result == 1) {
+//        Response response = new Response();
+            MetaDataResponse response = MetaDataResponse
+                    .builder()
+                    .httpStatus(HttpStatus.OK)
+                    .messageCode("Created Project Template for the User")
+                    .build();
+            return response;
+        }
+        return MetaDataResponse
+                .builder()
+                .httpStatus(HttpStatus.EXPECTATION_FAILED)
+                .messageCode("Project Creation Failed")
+                .build();
     }
 
 
