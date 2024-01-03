@@ -55,6 +55,8 @@ services:
     volumes:
       - ${TEMPLATE_DIR}:/templates
       - ${USER_SPACE_DIR}:/user-space-directory
+      - ${LLM_MODEL_DIR}:/model-directory
+
 
   angular-app:
     container_name: frontend
