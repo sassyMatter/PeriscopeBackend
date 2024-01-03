@@ -3,6 +3,9 @@
 #for unix based systems
 
 # Parse command-line arguments
+
+echo "Running migration script for template";
+
 while getopts "s:t:n:" opt; do
     case "$opt" in
         s) sourceDir="$OPTARG";;
@@ -23,6 +26,7 @@ targetDir="$targetParentDir/$targetDirName"
 # Check if the target directory exists, and create it if not
 if [ ! -d "$targetDir" ]; then
     mkdir "$targetDir"
+    echo "Created target Directory"
 else
     rm -rf "$targetDir"
     mkdir "$targetDir"
@@ -30,7 +34,7 @@ else
 fi
 
 # Copy the contents of the source directory to the target directory
-cp -r "$sourceDir"/* "$targetDir"
+cp -r "$sourceDir"/Template/* "$targetDir"
 
 # Check the copy operation result
 if [ $? -eq 0 ]; then

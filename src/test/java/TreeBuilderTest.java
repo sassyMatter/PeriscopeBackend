@@ -16,7 +16,6 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 public class TreeBuilderTest {
 
-
     @Test
     public void testBuildTree() {
         // Create sample CanvasData objects
