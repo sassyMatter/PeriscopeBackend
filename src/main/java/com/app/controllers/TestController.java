@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins="*")
-@RequestMapping("/hello" )
+@RequestMapping("/api/auth" )
 @Slf4j
 public class TestController {
 
@@ -78,6 +78,20 @@ public class TestController {
                 .build();
     }
 
+
+    @PostMapping("/delete-directory")
+    public MetaDataResponse deleteDirectory(@RequestBody Project project){
+        String dir = project.getSourceDir();
+
+        //
+        String dirtoDelete = "/user-space-directory/nirbhay-Project_alpha";
+
+
+
+
+        return null;
+
+    }
 
 
 
