@@ -69,7 +69,6 @@ public class llmService {
         catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
         try (BufferedReader stdout = new BufferedReader(new InputStreamReader(alpacaProcess.getInputStream()))) {
             return stdout.readLine();
         }

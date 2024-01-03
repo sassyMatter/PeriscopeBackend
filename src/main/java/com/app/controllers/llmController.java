@@ -10,7 +10,7 @@ import com.app.services.llmService;
 
 @CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/authx")
 public class llmController {
 
 

@@ -83,13 +83,24 @@ public class TestController {
     public MetaDataResponse deleteDirectory(@RequestBody Project project){
         String dir = project.getSourceDir();
 
-        //
-        String dirtoDelete = "/user-space-directory/nirbhay-Project_alpha";
+       log.info("Deleting dir {} ", dir);
 
 
-
-
-        return null;
+        int result = scriptService.deleteUserProjectDirectory(dir);
+        if (result == 1) {
+//        Response response = new Response();
+            MetaDataResponse response = MetaDataResponse
+                    .builder()
+                    .httpStatus(HttpStatus.OK)
+                    .messageCode("Deleted ")
+                    .build();
+            return response;
+        }
+        return MetaDataResponse
+                .builder()
+                .httpStatus(HttpStatus.EXPECTATION_FAILED)
+                .messageCode("Failed")
+                .build();
 
     }
 
