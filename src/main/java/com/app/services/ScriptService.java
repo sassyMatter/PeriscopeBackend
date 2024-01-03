@@ -76,6 +76,35 @@ public class ScriptService {
      * delete project on any update and recreate it with requirements
      */
     public int deleteUserProjectDirectory(String targetParentDir){
+        try {
+            List<String> command = new ArrayList<>();
+            File script = getScriptFile("delete_user_directory.sh");
+
+            log.info(script.getPath());
+            command.add("bash");
+            command.add(script.getPath()); // Name of the Bash script
+
+            // Add command-line arguments
+            command.add("-d");
+            command.add(targetParentDir);
+
+
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            processBuilder.inheritIO(); // Redirect process output to console
+
+            Process process = processBuilder.start();
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                System.out.println("Deleted User Project creation success.");
+                return 1;
+            } else {
+                System.err.println("Could not deleted user project" + exitCode);
+                return 0;
+            }
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 
