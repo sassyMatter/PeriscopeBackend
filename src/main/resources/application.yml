@@ -19,6 +19,7 @@ com:
     jwtExpirationTime: 10000000000000000000000000460000
 
   userSpace:
-    templateDirectory: /Users/nirbhay11.singh/IdeaProjects/Template
-    targetParentDirectory: /Users/nirbhay11.singh/IdeaProjects/UserSpaceDirectory
+    templateDirectory: /templates
+    targetParentDirectory: /user-space-directory
+    llmDirectory: /model-directory
 

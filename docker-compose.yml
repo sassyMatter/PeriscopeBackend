@@ -9,9 +9,6 @@ services:
       MYSQL_DATABASE: 'periscope'
     ports:
       - "3306:3306"
-    volumes:
-      - mysql_db_volume:${PWD}/volumes
-
 
   mongo-db:
     container_name: mongo-db
@@ -19,8 +16,6 @@ services:
     ports:
       - "27017:27017"
     hostname: mongo-db
-    volumes:
-      - mongodb_volume:${PWD}/volumes
 
   kafka:
     image: wurstmeister/kafka:2.13-2.8.1
@@ -35,8 +30,6 @@ services:
       - "9092:9092"
     depends_on:
       - zookeeper
-    volumes:
-      - kafka_volume:${PWD}/volumes
 
   zookeeper:
     container_name: zookeeper
@@ -44,14 +37,12 @@ services:
     platform: linux/amd64
     ports:
       - "2181:2181"
-    volumes:
-      - kafka_zookeeper_volume:${PWD}/volumes
 
   spring-app:
     container_name: backend
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
+    build:
+      context: .
+      dockerfile: Dockerfile
     image: moonbse/backend:latest
     platform: linux/amd64
     depends_on:
@@ -61,29 +52,26 @@ services:
     ports:
       - "8080:8080"
 #    network_mode: bridge
+    volumes:
+      - ${TEMPLATE_DIR}:/templates
+      - ${USER_SPACE_DIR}:/user-space-directory
+      - ${LLM_MODEL_DIR}:/model-directory
+
 
   angular-app:
     container_name: frontend
 #    build:
 #      context: .
-#      dockerfile: /Users/harshit8.singh/Developer/PeriscopeUI/Dockerfile
+#      dockerfile: Dockerfile
 
-#    image: moonbse/periscope-frontend:latest
+    image: moonbse/periscope-frontend:latest
 #    image: moonbse/periscope_frontend_local:amd64_local
-    image: periscope/hs_local:amd64_latest
     platform: linux/amd64
     ports:
       - "8085:80"
     depends_on:
       - spring-app
     environment:
-      - NODE_ENV=development
-
-
-volumes:
-  mysql_db_volume:
-  mongodb_volume:
-  kafka_volume:
-  kafka_zookeeper_volume:
+      - NODE_ENV=production
 
 
