@@ -49,9 +49,9 @@ services:
 
   spring-app:
     container_name: backend
-    build:
-      context: .
-      dockerfile: Dockerfile
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
     image: moonbse/backend:latest
     platform: linux/amd64
     depends_on:
@@ -66,17 +66,18 @@ services:
     container_name: frontend
 #    build:
 #      context: .
-#      dockerfile: Dockerfile
+#      dockerfile: /Users/harshit8.singh/Developer/PeriscopeUI/Dockerfile
 
-    image: moonbse/periscope-frontend:latest
+#    image: moonbse/periscope-frontend:latest
 #    image: moonbse/periscope_frontend_local:amd64_local
+    image: periscope/hs_local:amd64_latest
     platform: linux/amd64
     ports:
       - "8085:80"
     depends_on:
       - spring-app
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
 
 
 volumes:
