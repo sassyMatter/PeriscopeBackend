@@ -106,6 +106,8 @@ public class ProjectService {
     // Delete a project
     public void deleteProject(String projectId) {
         // find user and User object
+         Project project=projectRepository.findById(projectId).orElse(null);
+        
         // delete project reference and
         // finally delete the project
         projectRepository.deleteById(projectId);
