@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: 'periscope'
     ports:
       - "3307:3307"
+      
 
   mongo-db:
     container_name: mongo-db
@@ -67,6 +68,7 @@ services:
 #    image: moonbse/periscope-frontend:latest
 #    image: moonbse/periscope_frontend_local:amd64_local
     platform: linux/amd64
+
     ports:
       - "8085:80"
     depends_on:
