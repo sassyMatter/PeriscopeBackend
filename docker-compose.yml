@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: 'periscope'
     ports:
       - "3307:3307"
+      
 
   mongo-db:
     container_name: mongo-db
@@ -62,16 +63,18 @@ services:
     container_name: frontend
 #    build:
 #      context: .
-#      dockerfile: Dockerfile
+#      dockerfile: /Users/sangam.barnwal/Documents/Periscope/PeriscopeUI/Dockerfile
 
-    image: moonbse/periscope-frontend:latest
-#    image: moonbse/periscope_frontend_local:amd64_local
+#    image: periscope/periscope-sb-frontend
+    image: periscope/periscope-frontend:amd64_sangam
+    #    image: moonbse/periscope_frontend_local:amd64_local
     platform: linux/amd64
+
     ports:
       - "8085:80"
     depends_on:
       - spring-app
     environment:
-      - NODE_ENV=environment
+      - NODE_ENV=development
 
 

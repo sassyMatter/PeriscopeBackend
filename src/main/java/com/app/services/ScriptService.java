@@ -30,7 +30,18 @@ public class ScriptService {
 
 
     public File getScriptFile(String scriptName) throws IOException {
-        return scriptLoader.loadScriptFile(scriptName);
+        log.info("msg coming");
+        try {
+            log.info("test before");
+            File file=scriptLoader.loadScriptFile(scriptName);
+            log.info("file {}",file);
+            return file;
+        }
+        catch(Error e){
+            log.info("error is",e);
+        }
+        return null;
+
     }
 
 
@@ -38,12 +49,15 @@ public class ScriptService {
     public int createUserProjectDirectory(String targetDirName) {
         try {
             List<String> command = new ArrayList<>();
-            File script = getScriptFile("set_up_user_project.sh");
+            log.info("command");
 
+            File script = getScriptFile("set_up_user_project.sh");
+            log.info("running");
             log.info(script.getPath());
             command.add("bash");
+            log.info("running2");
             command.add(script.getPath()); // Name of the Bash script
-
+            log.info("running2");
             // Add command-line arguments
             command.add("-s");
             command.add(sourceDir);
@@ -51,11 +65,13 @@ public class ScriptService {
             command.add(targetParentDir);
             command.add("-n");
             command.add(targetDirName);
+            log.info("running2");
 
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             processBuilder.inheritIO(); // Redirect process output to console
 
             Process process = processBuilder.start();
+            log.info("process, {}",process);
             int exitCode = process.waitFor();
 
             if (exitCode == 0) {
@@ -93,13 +109,14 @@ public class ScriptService {
             processBuilder.inheritIO(); // Redirect process output to console
 
             Process process = processBuilder.start();
+            log.info("process {}",process);
             int exitCode = process.waitFor();
 
             if (exitCode == 0) {
                 System.out.println("Deleted User Project creation success.");
                 return 1;
             } else {
-                System.err.println("Could not deleted user project" + exitCode);
+                System.err.println("Could not deleted user project " + exitCode);
                 return 0;
             }
         } catch (IOException | InterruptedException e) {

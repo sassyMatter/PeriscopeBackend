@@ -6,16 +6,16 @@ import com.app.models.canvas.CanvasData;
 import com.app.repository.CanvasRepository;
 import com.app.repository.ProjectRepository;
 import com.app.repository.UserRepository;
+import com.app.services.ScriptService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 @Slf4j
-public class ProjectService {
+public class ProjectService{
     @Autowired
     private UserRepository userRepository;
 
@@ -24,7 +24,8 @@ public class ProjectService {
 
     @Autowired
     private CanvasRepository canvasDataRepository;
-
+    @Autowired
+    ScriptService scriptService;
 
     /**
      *
@@ -101,16 +102,69 @@ public class ProjectService {
 
     /**
      *
-     * @param projectId
+//     * @param projectId
      */
     // Delete a project
-    public void deleteProject(String projectId) {
+    public void deleteProject(String username,Project project) {
         // find user and User object
-         Project project=projectRepository.findById(projectId).orElse(null);
+        User user = userRepository.findByUsername(username).orElse(null);
+//         Project project=projectRepository.findById(projectId).orElse(null);
         
         // delete project reference and
+        assert user != null;
+        if(user.getProjects()!=null) {
+            log.info("users project before deleting,{}",user.getProjects());
+        }
+        if(user.getProjects()!=null) {
+            log.info("delete ongoing");
+
+        }
+
+
+        //saved it after deleting the reference from the user
+
+
         // finally delete the project
-        projectRepository.deleteById(projectId);
+        if(user.getProjects()!=null) {
+
+//            log.info("users project after deleting,{}", user.getProjects());
+//            for(Project projectx: user.getProjects()){
+//                log.info("projectx {} ",projectx.getId());
+//            }
+            boolean removed=false;
+            Project deleted=null;
+            for(Project pro: user.getProjects()) {
+                if (Objects.equals(pro.getId(), project.getId())) {
+                    deleted = pro;
+                    removed=true;
+                }
+            }
+
+            log.info("project {}",project.getId());
+            if( removed ) {
+                String sourcedir="/user-space-directory/"+project.getSourceDir();
+                log.info("getting project source dir,{}",sourcedir);
+//                log.info("sourcedir {}",project.getSourceDir());
+                int x=scriptService.deleteUserProjectDirectory(sourcedir);
+                if(x==1){
+                    log.info("project deleted from directory");
+                }
+                else{
+                    log.info("project not deleted from directory");
+                }
+                projectRepository.deleteById(project.getId());
+                user.getProjects().remove(deleted);
+                log.info("project removed");
+                userRepository.save(user);
+            }
+            else{
+                log.info("not working");
+            }
+//            for(Project projecty: user.getProjects()){
+//                log.info("projecty {} ",projecty.getId());
+//            }
+        }
+
     }
 
     /**
@@ -142,22 +196,60 @@ public class ProjectService {
     }
 
 
-    public Project createProjectForUser(String userId, Project project) {
-        log.info("Creating Project for User with user Id:: {} ", userId);
-        User user = userRepository.findByUsername(userId).orElse(null);
+    public Project createProjectForUser(String username, Project project) {
+        log.info("Creating Project for User with user Id:: {} ", username);
+        User user = userRepository.findByUsername(username).orElse(null);
+        log.info("user {}",user);
         if (user != null) {
             // Generate a predictable yet unique project name (e.g., appending timestamp)
 //            String projectName = generateUniqueProjectName(user.getUsername(), project.getProjectName());
 
             // Set other properties as needed
-//          project.setCanvasData(new CanvasData());
-            Project savedProject =  projectRepository.save(project);
-            // Add the project to the user's list of projects
-            user.getProjects().add(savedProject);
-//            userRepository.save(user);
 
+            String dirName = username + "-" + project.getProjectName();
+            log.info("sourcedir:{}", dirName);
+            project.setSourceDir(dirName);
+            int x=scriptService.createUserProjectDirectory(dirName);
+            System.out.println(x);
+            if(x==1){
+                log.info("directory created");
+            }
+            else{
+                log.info("directory not created");
+            }
+//          project.setCanvasData(new CanvasData());
+            //project repo not implemented
+
+            project.setSourceDirName(project.getProjectName());
+
+            log.info("last");
+            Project savedProject =  projectRepository.save(project);
+
+            try{
+                log.info("my projects:::: {}", user.getProjects() );
+
+                user.getProjects().add(savedProject);
+                log.info("my projects:::: {}", user.getProjects() );
+                userRepository.save(user);
+                // Add the project to the user's list of projects
+                log.info("working");
+            }
+            catch (Error error){
+                log.info("error ::::::",error);
+            }finally {
+                log.info(savedProject.toString());
+                return savedProject;
+            }
+
+
+//            log.info("savedProject12  {}",savedProject);
+
+//
+//
+
+//            log.info("saveddone");
             // Save the project
-            return savedProject;
+//            return savedProject;
         }
         return null;
     }
@@ -183,10 +275,33 @@ public class ProjectService {
         }
         return null;
     }
+    // changes made by me
+    public Project findProjectNameAndUser(String username,String projectName){
+        User user = userRepository.findByUsername(username).orElse(null);
+
+
+//        log.info("User is {} ", user);
+        if (user != null) {
+            log.info("User is {} ", user.getId());
+
+            Set<Project> project1=user.getProjects();
+            log.info("set of projects,{}", project1);
+//            log.info("set of projects ,{}",project1.size());
+            if(user.getProjects().isEmpty())
+                return null;
+            return user.getProjects()
+                    .stream()
+                    .filter(project -> project.getProjectName().equals(projectName))
+                    .findFirst()
+                    .orElse(null);
+        }
+        return null;
+    }
 
     public Project updateProjectState(String userName, String projectId, Project newProjectState) {
         // Find the user
         Optional<User> user = userRepository.findByUsername(userName);
+        log.info("user is present {}:", user.isPresent());
         if(!user.isPresent()){
             // raise exception and catch it to throw error
         }
