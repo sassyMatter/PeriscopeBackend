@@ -43,7 +43,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
-    image: moonbse/backend:latest
+    image: periscope/backend:latest
     platform: linux/amd64
     depends_on:
       - kafka

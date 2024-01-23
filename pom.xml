@@ -27,7 +27,7 @@
 			<artifactId>lombok</artifactId>
 			<version>1.18.30</version>
 			<optional>true</optional>
-			<version>1.18.30</version>
+			<!-- <version>1.18.30</version> -->
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-mongodb -->
 		<dependency>
