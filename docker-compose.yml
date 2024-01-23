@@ -39,10 +39,10 @@ services:
       - "2181:2181"
 
   spring-app:
-    container_name: backend
-    build:
-      context: .
-      dockerfile: Dockerfile
+    # container_name: backend
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
     image: moonbse/backend:latest
     platform: linux/amd64
     depends_on:
@@ -63,8 +63,8 @@ services:
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
-
-    image: moonbse/periscope-frontend:latest
+    image: periscope/hs_local:amd64_latest
+#    image: moonbse/periscope-frontend:latest
 #    image: moonbse/periscope_frontend_local:amd64_local
     platform: linux/amd64
     ports:
@@ -72,6 +72,6 @@ services:
     depends_on:
       - spring-app
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
 
 
