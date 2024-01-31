@@ -34,7 +34,7 @@ else
 fi
 
 # Copy the contents of the source directory to the target directory
-cp -r "$sourceDir"/Template/* "$targetDir"
+cp -r "$sourceDir"/* "$targetDir"
 
 # Check the copy operation result
 if [ $? -eq 0 ]; then

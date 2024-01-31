@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
+
 @Document(collection = "users")
 @Getter
 @Setter
@@ -44,6 +45,11 @@ public class User implements UserDetails {
     private Set<Project> projects = new HashSet<>();
 
 
+
+//    @Setter
+//    private void (){
+//
+//    }
 
     public User() {
     }

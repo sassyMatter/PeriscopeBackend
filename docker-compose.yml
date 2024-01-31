@@ -9,6 +9,7 @@ services:
       MYSQL_DATABASE: 'periscope'
     ports:
       - "3306:3306"
+      
 
   mongo-db:
     container_name: mongo-db
@@ -39,11 +40,11 @@ services:
       - "2181:2181"
 
   spring-app:
-    container_name: backend
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: moonbse/backend:latest
+    # container_name: backend
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    image: periscope/backend:latest
     platform: linux/amd64
     depends_on:
       - kafka
@@ -63,10 +64,11 @@ services:
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
-
-    image: moonbse/periscope-frontend:latest
+    image: periscope/hs_local:amd64_latest
+#    image: moonbse/periscope-frontend:latest
 #    image: moonbse/periscope_frontend_local:amd64_local
     platform: linux/amd64
+
     ports:
       - "8085:80"
     depends_on:

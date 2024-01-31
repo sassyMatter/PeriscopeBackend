@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin(origins="*")
-@RequestMapping("/api/auth" )
+@RequestMapping("/api/auth/")
 @Slf4j
 public class TestController {
 
@@ -89,6 +89,7 @@ public class TestController {
         int result = scriptService.deleteUserProjectDirectory(dir);
         if (result == 1) {
 //        Response response = new Response();
+
             MetaDataResponse response = MetaDataResponse
                     .builder()
                     .httpStatus(HttpStatus.OK)

@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+
 @RestController
 @RequestMapping("/user-space")
 @CrossOrigin(origins="*")
@@ -33,6 +34,7 @@ public class UserSpaceController {
 
     @Autowired
     private ProjectMapper projectMapper;
+
 
 
 
@@ -58,12 +60,13 @@ public class UserSpaceController {
     @PostMapping("/load-project")
     public ResponseEntity<?> loadProject(@RequestBody ProjectData projectData) {
         // Load project based on provided ProjectData
+       
         // Implement logic to load project from the database
         return ResponseEntity.ok("Project loaded successfully");
+        // return projectService.loadProject(projectData);
     }
 
     // redundant
-
 
     @PostMapping("/create-update-project")
     public MetaDataResponse<Project> createOrUpdateProject(@RequestBody Project project) {
@@ -72,40 +75,94 @@ public class UserSpaceController {
 
         String userName = userDetailsService.getCurrentUsername();
         Project updatedProject = null;
-        log.info("UserName :: {} ", userName);
+        log.info("UserName {}", userName);
 
 
         Project existingProject = null;
-        Optional<String> projectId = Optional.ofNullable(project.getId());
-        if(projectId.isPresent()){
-            existingProject = projectService.findProjectIdAndUser(userName, project.getId());
+//        Optional<String> projectId = Optional.ofNullable(project.getId());
+        Optional<String> projectName=Optional.ofNullable(project.getProjectName());
+
+//        log.info("projectName is present:: {}",project.getProjectName());
+//        log.info("kuch hai:: {}",projectName.isPresent());
+        if(projectName.isPresent()){
+            existingProject = projectService.findProjectNameAndUser(userName, project.getProjectName());
+//            log.info("Existing project_working:: {} ", existingProject);
         }
+//
+//        if (projectId.isPresent()) {
+//            existingProject = projectService.findProjectIdAndUser(userName, project.getId());
+//        }
+
 
         log.info("Existing project:: {} ", existingProject);
         if (existingProject != null) {
             // If the project already exists, update its state
-            log.info("Updating the project ");
-          updatedProject =   projectService.updateProjectState(userName, existingProject.getId(), project);
-        } else {
+//            log.info("Updating the project ");
+            log.info("deleting the project");
+            projectService.deleteProject(userName,existingProject);
+//          updatedProject =   projectService.updateProjectState(userName, existingProject.getId(), project);
+            log.info("deleted");
+       }
+
             // If the project doesn't exist, create and save a new project
+            log.info("projects ,{}",project);
             Project savedProject = projectService.createProjectForUser(userName, project);
             // put null check for saved project
-            return MetaDataResponse.<Project>
+
+            log.info("savedProject {}",savedProject);
+
+            if(savedProject != null)
+                return MetaDataResponse.<Project>
                             builder()
                     .data(savedProject)
                     .httpStatus(HttpStatus.OK)
                     .messageCode("Created Project for User")
                     .build();
-        }
+
 
         return MetaDataResponse.<Project>
                         builder()
                 .data(updatedProject)
                 .httpStatus(HttpStatus.OK)
-                .messageCode("Updated Project State")
+                .messageCode("Project not valid")
                 .build();
     }
 
+    @PostMapping("/delete-project")
+    public  MetaDataResponse<Project> delete_directory(@RequestBody Project project){
+        log.info("deletion going");
+        String userName = userDetailsService.getCurrentUsername();
+
+        Project existingProject = null;
+        Optional<String> projectId = Optional.ofNullable(project.getProjectName());
+        log.info("projectId {}",projectId);
+        if(projectId.isPresent()){
+            existingProject = projectService.findProjectNameAndUser(userName, project.getProjectName());
+        }
+        log.info("existing project {}",existingProject);
+        if(existingProject!=null) {
+            // project exists
+            log.info("project deltee");
+            projectService.deleteProject(userName,existingProject);
+
+            return MetaDataResponse.<Project>
+                            builder()
+                    .data(project)
+                    .httpStatus(HttpStatus.OK)
+                    .messageCode("Deleted Project State")
+                    .build();
+
+        }
+        else {
+            return MetaDataResponse.<Project>
+                            builder()
+                    .data(project)
+                    .httpStatus(HttpStatus.OK)
+                    .messageCode("Project does not exist")
+                    .build();
+        }
+
+    }
 
 
 }
