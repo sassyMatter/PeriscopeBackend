@@ -105,9 +105,14 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
     }
 
     /**
-     *
+     *  version 0.1
      * @param rootNode goes to rootNode executing configuration nodes immediately and execution node eventually
      * error reporting in execution of any node can be reported from here, this kind of feedback would be essential in future
+     *
+     *  version 0.2
+     *  Now there is effectively no difference between configuration and execution node, but we are keeping this structure
+     *  for future requirements
+     *
      */
 
     public void processGraph(TreeNode rootNode) {
@@ -193,7 +198,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
             String functionCode = functionComponent.generateCode();
             log.info("Generated Code for function:: {} ", functionCode);
             codeWriterService.writeToFile(functionCode, "function");
-            log.info("Generated Code for function {} ", functionCode);
+
         }
     }
 

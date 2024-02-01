@@ -2,6 +2,7 @@ package com.app.controllers;
 
 
 
+import com.app.models.Project;
 import com.app.models.Response;
 import com.app.models.canvas.CanvasData;
 import com.app.models.canvasSchema.TreeNode;
@@ -24,7 +25,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/canvas")
+@RequestMapping("/api/auth")
 @CrossOrigin(origins="*")
 @Slf4j
 public class CanvasController {
@@ -82,8 +83,20 @@ public class CanvasController {
 
     }
 
+    /**
+     * Guidelines to use this sample as base for development
+     *
+     * we are getting project to run from request (while implementing we will get it through request or simply project ID,
+     * which we can use to fetch and run the project
+     * it will contain the source directory of the user project
+     */
+    @PostMapping("/run-project-test")
+    public Response RunProjectTest(@RequestBody Project project){
 
-    // manual test for components
+        return null;
+    }
+
+
     @PostMapping("/test")
     public Response testController(@RequestBody String json , @RequestParam String typeName) throws IOException {
 

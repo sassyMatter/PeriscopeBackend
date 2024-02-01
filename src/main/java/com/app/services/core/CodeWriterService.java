@@ -1,5 +1,6 @@
 package com.app.services.core;
 
+import com.app.models.canvas.CanvasData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -63,6 +64,12 @@ public class CodeWriterService {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public Boolean writeNodeToUserProjectFile(String baseProjectDir, String input, String inputType){
+
+
+        return true;
     }
 
     /**
