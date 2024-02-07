@@ -1,12 +1,13 @@
 package com.app.controllers;
 
-
+import com.app.models.account.User;
 import com.app.models.Project;
 import com.app.models.payload.response.MetaDataResponse;
 import com.app.models.payload.response.ProjectData;
 
 
 import com.app.repository.ProjectRepository;
+import com.app.repository.UserRepository;
 import com.app.services.core.ProjectService;
 import com.app.services.core.UserDetailsServiceImpl;
 import com.app.utils.ProjectMapper;
@@ -16,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+
 import java.util.List;
 import java.util.Optional;
 
@@ -24,7 +26,7 @@ import java.util.Optional;
 @RequestMapping("/user-space")
 @CrossOrigin(origins="*")
 @Slf4j
-public class UserSpaceController {
+public class UserSpaceController{
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -36,21 +38,24 @@ public class UserSpaceController {
     private ProjectMapper projectMapper;
 
 
-
-
-
     @Autowired
     private UserDetailsServiceImpl userDetailsService;
 
+    @Autowired
+    private UserRepository userRepository;
+
+
+
     @GetMapping("/get-all-projects")
     public MetaDataResponse<List<Project>> getAllProjects() {
-        List<Project> allprojectsData = projectService.getALlProjects();
+        String currUsername = userDetailsService.getCurrentUsername();
 //        List<ProjectData> projectData = projectMapper.mapToProjectDataList(allprojectsData);
-
-
+        // String userName = userDetailsService.getCurrentUsername();
+        
+        List<Project> userProjects = userDetailsService.getUserProjects(currUsername);
         return MetaDataResponse.<List<Project>>
                         builder()
-                        .data(allprojectsData)
+                        .data(userProjects)
                         .httpStatus(HttpStatus.OK)
                 .messageCode("SUCCESS")
                 .build();

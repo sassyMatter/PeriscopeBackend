@@ -45,6 +45,9 @@ public class Project {
     public String getImageURL() {
         return imageURL;
     }
+    public CanvasData getCanvasData(){
+        return canvasData;
+    }
 
     public void setImageURL(String imageURL) {
         this.imageURL = imageURL;

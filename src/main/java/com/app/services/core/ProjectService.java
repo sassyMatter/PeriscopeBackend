@@ -84,7 +84,7 @@ public class ProjectService{
     }
 
 
-    public List<Project> getALlProjects(){
+    public List<Project> getAllProjects(){
         return projectRepository.findAll();
     }
 
@@ -219,7 +219,7 @@ public class ProjectService{
             }
 //          project.setCanvasData(new CanvasData());
             //project repo not implemented
-
+            
             project.setSourceDirName(project.getProjectName());
 
             log.info("last");
