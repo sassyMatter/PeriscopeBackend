@@ -232,7 +232,7 @@ public class ProjectService{
                 log.info("my projects:::: {}", user.getProjects() );
                 userRepository.save(user);
                 // Add the project to the user's list of projects
-                log.info("working");
+
             }
             catch (Error error){
                 log.info("error ::::::",error);
@@ -279,14 +279,11 @@ public class ProjectService{
     public Project findProjectNameAndUser(String username,String projectName){
         User user = userRepository.findByUsername(username).orElse(null);
 
-
-//        log.info("User is {} ", user);
         if (user != null) {
             log.info("User is {} ", user.getId());
 
             Set<Project> project1=user.getProjects();
             log.info("set of projects,{}", project1);
-//            log.info("set of projects ,{}",project1.size());
             if(user.getProjects().isEmpty())
                 return null;
             return user.getProjects()
