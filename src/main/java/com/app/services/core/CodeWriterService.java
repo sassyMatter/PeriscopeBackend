@@ -1,6 +1,5 @@
 package com.app.services.core;
 
-import com.app.models.canvas.CanvasData;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,25 +21,38 @@ public class CodeWriterService {
     public static String targetParentDir;
 
     /**
-     * Now we will either write a controller,
-     * a service method
-     * or configuration: database initializer and Kafka configuration, parameterized them
+     * This will be used to write code to the user project template
      *
      */
-    public void writeToFile(String input, String type) {
+    public void writeToFile(String input, String type, String projectDir) {
 
 
         try {
 
             String filePath = null;
-            if("rest".equals(type)){
-//                 filePath = Converter.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-//                   filePath = Converter.class.getResource("/Converter.class").getPath();
-                filePath = "/Users/nirbhay11.singh/IdeaProjects/PeriscopeBackend/src/main/java/com/app/controllers/Converter.java";
-            }else {
-//                 filePath = CodeWriterService.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-                filePath = "/Users/nirbhay11.singh/IdeaProjects/PeriscopeBackend/src/main/java/com/app/services/CustomCodeService.java";
+
+            switch (type) {
+                case "restInterface":
+                    filePath = projectDir + "/src/main/java/com/app/controllers/UserEndpoint.java";
+                    break;
+                case "function":
+                    filePath = projectDir + "/src/main/java/com/app/services/CustomCodeService.java";
+                    break;
+                case "input":
+                    filePath = projectDir + "src/main/java/com/app/models/customModels";
+                    break;
+                case "queue":
+                    filePath = projectDir + "src/main/resources";
+                    break;
+                case "database":
+                    filePath = projectDir + "src/main/resources";;
+                    break;
+                default:
+                    // Handle the default case if needed
+                    log.error("Type mismatch while writing to file");
+                    break;
             }
+            log.info("File path for node {} ", filePath);
 
 
             Path file = Path.of(filePath);
@@ -66,11 +78,7 @@ public class CodeWriterService {
         }
     }
 
-    public Boolean writeNodeToUserProjectFile(String baseProjectDir, String input, String inputType){
 
-
-        return true;
-    }
 
     /**
      *

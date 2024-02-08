@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -21,10 +22,12 @@ import java.util.Map;
 public class InputComponent implements CodeComponent {
 
     private Map<String, String> customTypes;
+    private String outputClassDirectory;
 
 
-    public InputComponent(Map<String, String> customTypes) {
+    public InputComponent(Map<String, String> customTypes, String outputClassDirectory) {
        this.customTypes = customTypes;
+       this.outputClassDirectory = outputClassDirectory;
 
     }
     @Override
@@ -33,7 +36,7 @@ public class InputComponent implements CodeComponent {
         customTypes.forEach((type, json) -> {
             try {
                 log.info("Creating types :: {} from {}", type, json);
-                UtilityClass.convertJsonToJavaClass(json, UtilityClass.OUTPUT_CLASS_DIRECTORY, UtilityClass.PACKAGE_NAME, type);
+                UtilityClass.convertJsonToJavaClass(json, new File(outputClassDirectory), UtilityClass.PACKAGE_NAME, type);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

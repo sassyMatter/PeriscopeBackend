@@ -115,7 +115,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
      *
      */
 
-    public void processGraph(TreeNode rootNode) {
+    public void processGraph(TreeNode rootNode, String projectDir) {
         log.info("Starting simulation...");
         Stack<TreeNode> globalStack = new Stack<>();
         Stack<TreeNode> configStack = new Stack<>();
@@ -152,17 +152,17 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
         // Process configuration nodes
         while (!configStack.isEmpty()) {
             TreeNode currentConfigNode = configStack.pop();
-            processExecutionNode(currentConfigNode);
+            processExecutionNode(currentConfigNode, projectDir);
         }
     }
 
 
-    private void processExecutionNode(TreeNode node) {
+    private void processExecutionNode(TreeNode node, String projectDir) {
         // Process execution node
         System.out.println("Processing execution node: " + node.data);
         CanvasObject object = node.data;
         log.info("type is :: {}, \n object :: {}",  object.getType(), object);
-        if(Objects.equals(object.type, "rest")){
+        if(Objects.equals(object.type, "restInterface")){
             // generate code for rest
             RestComponent restComponent = RestComponent
                     .builder()
@@ -178,11 +178,11 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
             String generatedCode = restComponent.generateCode();
 
-            codeWriterService.writeToFile(generatedCode, "rest");
+            codeWriterService.writeToFile(generatedCode, "restInterface", projectDir);
             log.info("Generated Code for rest {} ", generatedCode);
 
         }
-        if(Objects.equals(object.type, "func")){
+        if(Objects.equals(object.type, "function")){
             // generate code for func
             FunctionComponent functionComponent = FunctionComponent
                     .builder()
@@ -197,7 +197,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
             String functionCode = functionComponent.generateCode();
             log.info("Generated Code for function:: {} ", functionCode);
-            codeWriterService.writeToFile(functionCode, "function");
+            codeWriterService.writeToFile(functionCode, "function", projectDir);
 
         }
     }

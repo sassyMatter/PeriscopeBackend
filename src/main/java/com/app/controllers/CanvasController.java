@@ -76,7 +76,7 @@ public class CanvasController {
 
         TreeNode root = treeBuilderService.buildTree(data);
         log.info("root :: {}", root);
-        treeBuilderService.processGraph(root);
+        treeBuilderService.processGraph(root, "");
 
         Response res = Response.builder().response("Simulation Success").build();
         return res;
@@ -217,7 +217,7 @@ public class CanvasController {
             log.info("root :: {}", root);
 
 //            treeBuilderService.traverseTree(root);
-            treeBuilderService.processGraph(root);
+            treeBuilderService.processGraph(root, "");
 
         }
 
