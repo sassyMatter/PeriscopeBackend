@@ -235,7 +235,7 @@ public class ProjectService{
                 log.info("my projects:::: {}", user.getProjects() );
                 userRepository.save(user);
                 // Add the project to the user's list of projects
-                log.info("working");
+
             }
             catch (Error error){
                 log.info("error ::::::",error);
@@ -282,14 +282,11 @@ public class ProjectService{
     public Project findProjectNameAndUser(String username,String projectName){
         User user = userRepository.findByUsername(username).orElse(null);
 
-
-//        log.info("User is {} ", user);
         if (user != null) {
             log.info("User is {} ", user.getId());
 
             Set<Project> project1=user.getProjects();
             log.info("set of projects,{}", project1);
-//            log.info("set of projects ,{}",project1.size());
             if(user.getProjects().isEmpty())
                 return null;
             return user.getProjects()
@@ -301,7 +298,7 @@ public class ProjectService{
         return null;
     }
 
-    public Project updateProjectState(String userName, String projectId, Project newProjectState) {
+    public Project updateProjectState(String userName, String projectName, Project newProjectState) {
         // Find the user
         Optional<User> user = userRepository.findByUsername(userName);
         log.info("user is present {}:", user.isPresent());
@@ -313,18 +310,26 @@ public class ProjectService{
             User existingUser = user.get();
             // Find the project within the user's projects
             Optional<Project> optionalProject = existingUser.getProjects().stream()
-                    .filter(project -> project.getId().equals(projectId))
+                    .filter(project -> project.getProjectName().equals(projectName))
                     .findFirst();
 
             if (optionalProject.isPresent()) {
                 Project existingProject = optionalProject.get();
 
                 // Update the properties of the existing project with the new state
-                existingProject.setProjectName(newProjectState.getProjectName());
+
                 existingProject.setImageURL(newProjectState.getImageURL());
                 existingProject.setConfigurations(newProjectState.getConfigurations());
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
-
+                int x=scriptService.createUserProjectDirectory(newProjectState.getSourceDir());
+                System.out.println(x);
+                if(x==1){
+                    log.info("directory created");
+                }
+                else{
+                    log.info("directory not created");
+                }
+//
                 // Update other properties as needed
 
                 // Save the updated project

@@ -2,6 +2,7 @@ package com.app.controllers;
 
 
 
+import com.app.models.Project;
 import com.app.models.Response;
 import com.app.models.canvas.CanvasData;
 import com.app.models.canvasSchema.TreeNode;
@@ -48,9 +49,13 @@ public class CanvasController {
     KafkaTemplate kafkaTemplate;
 
     @PostMapping("/post-canvas-data")
-    public Response PostCanvasData(@RequestBody CanvasData data){
+    public Response PostCanvasData(@RequestBody Project project){
+//        log.info("project {}",project);
+        CanvasData data=project.getCanvasData();
         log.info("Saving canvas data {} ", data);
+
         canvasService.saveCanvasData(data);
+
         Response response = new Response();
         String res = "Received data :: " + data;
         response.setResponse(res);
