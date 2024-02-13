@@ -61,10 +61,6 @@ services:
 
   angular-app:
     container_name: frontend
-    image: periscope/periscope-frontend:amd64_latest
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
     image: periscope/hs_local
     platform: linux/amd64
     ports:
