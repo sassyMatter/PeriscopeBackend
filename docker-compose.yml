@@ -44,7 +44,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
-    image: periscope/backend:latest
+    image: periscope/backend
     platform: linux/amd64
     depends_on:
       - kafka
@@ -64,16 +64,13 @@ services:
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
-    image: periscope/hs_local:amd64_latest
-#    image: moonbse/periscope-frontend:latest
-#    image: moonbse/periscope_frontend_local:amd64_local
+    image: periscope/hs_local
     platform: linux/amd64
-
     ports:
       - "8085:80"
     depends_on:
       - spring-app
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
 
 
