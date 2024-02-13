@@ -60,7 +60,10 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         
         User user = userRepository.findByUsername(username).orElse(null);
         List<Project> temp = new ArrayList<>();
-        user.getProjects().stream().forEach(proj -> temp.add(proj));
+        if(user != null){
+            
+            user.getProjects().stream().forEach(proj -> temp.add(proj));
+        }
         return temp;
     }
 }
