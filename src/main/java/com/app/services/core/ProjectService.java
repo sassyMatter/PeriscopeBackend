@@ -219,7 +219,10 @@ public class ProjectService{
             }
 //          project.setCanvasData(new CanvasData());
             //project repo not implemented
-            
+            if(project.getCanvasData()!=null) {
+                log.info("canvas data:::: {}", project.getCanvasData());
+                canvasDataRepository.save(project.getCanvasData());
+            }
             project.setSourceDirName(project.getProjectName());
 
             log.info("last");
@@ -295,7 +298,7 @@ public class ProjectService{
         return null;
     }
 
-    public Project updateProjectState(String userName, String projectId, Project newProjectState) {
+    public Project updateProjectState(String userName, String projectName, Project newProjectState) {
         // Find the user
         Optional<User> user = userRepository.findByUsername(userName);
         log.info("user is present {}:", user.isPresent());
@@ -307,18 +310,26 @@ public class ProjectService{
             User existingUser = user.get();
             // Find the project within the user's projects
             Optional<Project> optionalProject = existingUser.getProjects().stream()
-                    .filter(project -> project.getId().equals(projectId))
+                    .filter(project -> project.getProjectName().equals(projectName))
                     .findFirst();
 
             if (optionalProject.isPresent()) {
                 Project existingProject = optionalProject.get();
 
                 // Update the properties of the existing project with the new state
-                existingProject.setProjectName(newProjectState.getProjectName());
+
                 existingProject.setImageURL(newProjectState.getImageURL());
                 existingProject.setConfigurations(newProjectState.getConfigurations());
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
-
+                int x=scriptService.createUserProjectDirectory(newProjectState.getSourceDir());
+                System.out.println(x);
+                if(x==1){
+                    log.info("directory created");
+                }
+                else{
+                    log.info("directory not created");
+                }
+//
                 // Update other properties as needed
 
                 // Save the updated project

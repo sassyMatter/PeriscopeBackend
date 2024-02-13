@@ -73,9 +73,9 @@ public class UserSpaceController{
 
     // redundant
 
-    @PostMapping("/create-update-project")
+    @PostMapping("/create-project")
     public MetaDataResponse<Project> createOrUpdateProject(@RequestBody Project project) {
-        // Create a new project or update an existing project based on the project name
+
 //        Project project = projectMapper.mapProjectDataToProject(projectData);
 
         String userName = userDetailsService.getCurrentUsername();
@@ -86,27 +86,30 @@ public class UserSpaceController{
         Project existingProject = null;
 //        Optional<String> projectId = Optional.ofNullable(project.getId());
         Optional<String> projectName=Optional.ofNullable(project.getProjectName());
-
-//        log.info("projectName is present:: {}",project.getProjectName());
-//        log.info("kuch hai:: {}",projectName.isPresent());
         if(projectName.isPresent()){
             existingProject = projectService.findProjectNameAndUser(userName, project.getProjectName());
 //            log.info("Existing project_working:: {} ", existingProject);
         }
 //
-//        if (projectId.isPresent()) {
-//            existingProject = projectService.findProjectIdAndUser(userName, project.getId());
-//        }
+//
 
 
         log.info("Existing project:: {} ", existingProject);
         if (existingProject != null) {
             // If the project already exists, update its state
 //            log.info("Updating the project ");
-            log.info("deleting the project");
-            projectService.deleteProject(userName,existingProject);
-//          updatedProject =   projectService.updateProjectState(userName, existingProject.getId(), project);
-            log.info("deleted");
+            log.info("Project with this name already exists");
+            return MetaDataResponse.<Project>
+                            builder()
+                    .data(null)
+                    .httpStatus(HttpStatus.BAD_REQUEST)
+                    .messageCode("Error:Project name is already taken")
+                    .build();
+// comment kiya hun kyuki check kr rha hu same name ka project exist nai krna chahiye
+//            log.info("deleting the project");
+//            projectService.deleteProject(userName,existingProject);
+//
+//            log.info("deleted");
        }
 
             // If the project doesn't exist, create and save a new project
@@ -128,11 +131,27 @@ public class UserSpaceController{
         return MetaDataResponse.<Project>
                         builder()
                 .data(updatedProject)
-                .httpStatus(HttpStatus.OK)
+                .httpStatus(HttpStatus.BAD_REQUEST)
                 .messageCode("Project not valid")
                 .build();
     }
+    @PostMapping("/update-project")
+    public MetaDataResponse<Project> updateProject(@RequestBody Project project){
 
+        String userName = userDetailsService.getCurrentUsername();
+        projectService.deleteProject(userName,project);
+        Project savedproject=projectService.updateProjectState(userName,project.getProjectName(),project);
+
+        if(savedproject!=null) {
+            return MetaDataResponse.<Project>
+                            builder()
+                    .data(savedproject)
+                    .httpStatus(HttpStatus.OK)
+                    .messageCode("Project updated")
+                    .build();
+        }
+        return null;
+    }
     @PostMapping("/delete-project")
     public  MetaDataResponse<Project> delete_directory(@RequestBody Project project){
         log.info("deletion going");
