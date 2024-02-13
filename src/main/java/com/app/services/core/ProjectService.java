@@ -305,8 +305,11 @@ public class ProjectService{
         if(!user.isPresent()){
             // raise exception and catch it to throw error
         }
+        canvasDataRepository.save(newProjectState.getCanvasData());
 //        Optional<User> optionalUser = userRepository.findById(user.get().getId());
         if (user.isPresent()) {
+            log.info("user {}",user);
+            log.info("projectName {}",newProjectState);
             User existingUser = user.get();
             // Find the project within the user's projects
             Optional<Project> optionalProject = existingUser.getProjects().stream()
@@ -317,19 +320,11 @@ public class ProjectService{
                 Project existingProject = optionalProject.get();
 
                 // Update the properties of the existing project with the new state
-
+               // existingProject.setProjectName(newProjectState.getProjectName());
                 existingProject.setImageURL(newProjectState.getImageURL());
                 existingProject.setConfigurations(newProjectState.getConfigurations());
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
-                int x=scriptService.createUserProjectDirectory(newProjectState.getSourceDir());
-                System.out.println(x);
-                if(x==1){
-                    log.info("directory created");
-                }
-                else{
-                    log.info("directory not created");
-                }
-//
+                existingProject.setConfigurations(newProjectState.getConfigurations());
                 // Update other properties as needed
 
                 // Save the updated project

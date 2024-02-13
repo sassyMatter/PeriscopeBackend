@@ -130,11 +130,9 @@ public class UserSpaceController{
     }
     @PostMapping("/update-project")
     public MetaDataResponse<Project> updateProject(@RequestBody Project project){
-
         String userName = userDetailsService.getCurrentUsername();
-        projectService.deleteProject(userName,project);
+        log.info("username{},",userName);
         Project savedproject=projectService.updateProjectState(userName,project.getProjectName(),project);
-
         if(savedproject!=null) {
             return MetaDataResponse.<Project>
                             builder()
