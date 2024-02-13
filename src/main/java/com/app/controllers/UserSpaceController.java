@@ -105,7 +105,7 @@ public class UserSpaceController{
                     .httpStatus(HttpStatus.BAD_REQUEST)
                     .messageCode("Error:Project name is already taken")
                     .build();
-// comment kiya hun kyuki check kr rha hu same name ka project exist nai krna chahiye
+
 //            log.info("deleting the project");
 //            projectService.deleteProject(userName,existingProject);
 //
@@ -137,11 +137,9 @@ public class UserSpaceController{
     }
     @PostMapping("/update-project")
     public MetaDataResponse<Project> updateProject(@RequestBody Project project){
-
         String userName = userDetailsService.getCurrentUsername();
-        projectService.deleteProject(userName,project);
+        log.info("username{},",userName);
         Project savedproject=projectService.updateProjectState(userName,project.getProjectName(),project);
-
         if(savedproject!=null) {
             return MetaDataResponse.<Project>
                             builder()
