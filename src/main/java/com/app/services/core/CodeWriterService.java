@@ -79,6 +79,46 @@ public class CodeWriterService {
     }
 
 
+    public void writeToConfigFiles(String input, String type, String projectDir) {
+
+
+        try {
+
+            String filePath = null;
+
+            switch (type) {
+                case "input":
+                    filePath = projectDir + "src/main/java/com/app/models/customModels";
+                    break;
+                case "queue":
+                    filePath = projectDir + "src/main/resources/kafka_config.txt";
+                    break;
+                case "database":
+                    filePath = projectDir + "src/main/resources/initializer.sql";;
+                    break;
+                default:
+                    // Handle the default case if needed
+                    log.error("Type mismatch while writing to file");
+                    break;
+            }
+            log.info("File path for node {} ", filePath);
+
+
+            Path file = Path.of(filePath);
+            log.info("file:: {} ", file);
+            List<String> lines = Files.readAllLines(file);
+
+            lines.add(input);
+
+            // Write the modified content back to the file
+            Files.write(file, lines, StandardOpenOption.TRUNCATE_EXISTING);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 
     /**
      *

@@ -133,7 +133,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
             }
             if(getNodeExecutionType(current.data.getType()).equals(SysConstants.CONFIGURATION) && !processedNodes.contains(current.data.id)) {
-                processConfigurationNode(current);
+                processConfigurationNode(current, projectDir);
                 processedNodes.add(current.data.id);
             }
 
@@ -202,7 +202,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
         }
     }
 
-    private void processConfigurationNode(TreeNode node) {
+    private void processConfigurationNode(TreeNode node, String projectDir) {
         // Process configuration node
         System.out.println("Processing configuration node: " + node.data);
         CanvasObject object = node.data;
@@ -214,7 +214,8 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
                     .tableDefinitions(object.tableDefinitions)
                     .build();
 
-            databaseComponent.generateCode();
+           String tableDefs = databaseComponent.generateCode();
+           codeWriterService.writeToConfigFiles(tableDefs, "database", projectDir);
             log.info("Configured Database");
         }
         if(Objects.equals(object.type, "queue")){
@@ -223,10 +224,10 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
             QueueComponent queueComponent = QueueComponent
                     .builder()
                     .topic(object.topic)
-                    .kafkaAdmin(kafkaAdmin)
                     .build();
 
-            queueComponent.configureQueue();
+            String topic = queueComponent.generateQueue();
+            codeWriterService.writeToConfigFiles(topic,"queue", projectDir);
             log.info("Configured queue component {} ", queueComponent);
         }
         if(Objects.equals(object.type, "input")){
@@ -234,6 +235,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
             InputComponent inputComponent = InputComponent
                     .builder()
                     .customTypes(object.customTypes)
+                    .outputClassDirectory(projectDir)
                     .build();
             inputComponent.generateCode();
             log.info("Configured input component {} ", inputComponent);

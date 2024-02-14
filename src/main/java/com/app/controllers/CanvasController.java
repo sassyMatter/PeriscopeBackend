@@ -115,7 +115,7 @@ public class CanvasController {
 
 
         // testing component's with code-writer
-        log.info("Testing components 1.RestInterface \n 2.Function \n 3.Database");
+        log.info("Testing components 1.RestInterface \n 2.Function \n 3.Database \n 4.Queue \n 5.Kafka");
 
 //        Map<String, String> requestBody = new HashMap<>();
 //        requestBody.put("String", "var");
@@ -205,7 +205,7 @@ public class CanvasController {
 
     //api test for simulation
     @PostMapping("/simulation-test")
-    public Response simulationController(){
+    public Response simulationController(@RequestBody Project project){
 
         List<CanvasData> dataList = canvasService.getAllCanvasData();
 

@@ -37,6 +37,10 @@ public class QueueComponent {
         adminClient.createTopics(Collections.singleton(new NewTopic(topic, 1, (short) 1)), createTopicsOptions);
     }
 
+    public String generateQueue(){
+        return topic;
+    }
+
     private Map<String, Object> getAdminClientConfig() {
         return kafkaAdmin.getConfigurationProperties();
     }
