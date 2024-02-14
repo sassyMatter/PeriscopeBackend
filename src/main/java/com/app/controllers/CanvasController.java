@@ -25,7 +25,7 @@ import java.util.*;
 
 
 @RestController
-@RequestMapping("/canvas")
+@RequestMapping("/api/auth")
 @CrossOrigin(origins="*")
 @Slf4j
 public class CanvasController {
@@ -80,15 +80,27 @@ public class CanvasController {
 
         TreeNode root = treeBuilderService.buildTree(data);
         log.info("root :: {}", root);
-        treeBuilderService.processGraph(root);
+        treeBuilderService.processGraph(root, "");
 
         Response res = Response.builder().response("Simulation Success").build();
         return res;
 
     }
 
+    /**
+     * Guidelines to use this sample as base for development
+     *
+     * we are getting project to run from request (while implementing we will get it through request or simply project ID,
+     * which we can use to fetch and run the project
+     * it will contain the source directory of the user project
+     */
+    @PostMapping("/run-project-test")
+    public Response RunProjectTest(@RequestBody Project project){
 
-    // manual test for components
+        return null;
+    }
+
+
     @PostMapping("/test")
     public Response testController(@RequestBody String json , @RequestParam String typeName) throws IOException {
 
@@ -107,7 +119,7 @@ public class CanvasController {
 
 
         // testing component's with code-writer
-        log.info("Testing components 1.RestInterface \n 2.Function \n 3.Database");
+        log.info("Testing components 1.RestInterface \n 2.Function \n 3.Database \n 4.Queue \n 5.Kafka");
 
 //        Map<String, String> requestBody = new HashMap<>();
 //        requestBody.put("String", "var");
@@ -197,7 +209,7 @@ public class CanvasController {
 
     //api test for simulation
     @PostMapping("/simulation-test")
-    public Response simulationController(){
+    public Response simulationController(@RequestBody Project project){
 
         List<CanvasData> dataList = canvasService.getAllCanvasData();
 
@@ -209,7 +221,7 @@ public class CanvasController {
             log.info("root :: {}", root);
 
 //            treeBuilderService.traverseTree(root);
-            treeBuilderService.processGraph(root);
+            treeBuilderService.processGraph(root, "");
 
         }
 
