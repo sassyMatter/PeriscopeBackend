@@ -8,7 +8,7 @@ services:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: 'periscope'
     ports:
-      - "3306:3306"
+      - "3307:3307"
       
 
   mongo-db:
@@ -44,7 +44,7 @@ services:
     # build:
     #   context: .
     #   dockerfile: Dockerfile
-    image: periscope/backend:latest
+    image: periscope/backend
     platform: linux/amd64
     depends_on:
       - kafka
@@ -61,19 +61,13 @@ services:
 
   angular-app:
     container_name: frontend
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-    image: periscope/hs_local:amd64_latest
-#    image: moonbse/periscope-frontend:latest
-#    image: moonbse/periscope_frontend_local:amd64_local
+    image: periscope/hs_local
     platform: linux/amd64
-
     ports:
       - "8085:80"
     depends_on:
       - spring-app
     environment:
-      - NODE_ENV=production
+      - NODE_ENV=development
 
 
