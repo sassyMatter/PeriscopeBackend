@@ -49,9 +49,13 @@ public class CanvasController {
     KafkaTemplate kafkaTemplate;
 
     @PostMapping("/post-canvas-data")
-    public Response PostCanvasData(@RequestBody CanvasData data){
+    public Response PostCanvasData(@RequestBody Project project){
+//        log.info("project {}",project);
+        CanvasData data=project.getCanvasData();
         log.info("Saving canvas data {} ", data);
+
         canvasService.saveCanvasData(data);
+
         Response response = new Response();
         String res = "Received data :: " + data;
         response.setResponse(res);
