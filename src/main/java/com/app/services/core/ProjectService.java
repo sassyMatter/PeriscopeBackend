@@ -219,10 +219,10 @@ public class ProjectService{
             }
 //          project.setCanvasData(new CanvasData());
             //project repo not implemented
-            if(project.getCanvasData()!=null) {
-                log.info("canvas data:::: {}", project.getCanvasData());
+            if(project.getCanvasData() != null){
                 canvasDataRepository.save(project.getCanvasData());
             }
+            
             project.setSourceDirName(project.getProjectName());
 
             log.info("last");

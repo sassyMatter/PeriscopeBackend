@@ -7,12 +7,8 @@ import com.app.repository.CanvasRepository;
 import com.app.repository.ProjectRepository;
 import com.app.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -64,7 +60,10 @@ public class UserDetailsServiceImpl implements UserDetailsService{
         
         User user = userRepository.findByUsername(username).orElse(null);
         List<Project> temp = new ArrayList<>();
-        user.getProjects().stream().forEach(proj -> temp.add(proj));
+        if(user != null){
+            
+            user.getProjects().stream().forEach(proj -> temp.add(proj));
+        }
         return temp;
     }
 }

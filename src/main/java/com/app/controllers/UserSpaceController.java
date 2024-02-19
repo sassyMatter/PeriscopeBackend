@@ -98,18 +98,11 @@ public class UserSpaceController{
         if (existingProject != null) {
             // If the project already exists, update its state
 //            log.info("Updating the project ");
-            log.info("Project with this name already exists");
-            return MetaDataResponse.<Project>
-                            builder()
-                    .data(null)
-                    .httpStatus(HttpStatus.BAD_REQUEST)
-                    .messageCode("Error:Project name is already taken")
-                    .build();
 
-//            log.info("deleting the project");
-//            projectService.deleteProject(userName,existingProject);
-//
-//            log.info("deleted");
+           log.info("deleting the project");
+           projectService.deleteProject(userName,existingProject);
+
+           log.info("deleted");
        }
 
             // If the project doesn't exist, create and save a new project

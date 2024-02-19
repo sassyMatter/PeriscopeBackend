@@ -105,12 +105,17 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
     }
 
     /**
-     *
+     *  version 0.1
      * @param rootNode goes to rootNode executing configuration nodes immediately and execution node eventually
      * error reporting in execution of any node can be reported from here, this kind of feedback would be essential in future
+     *
+     *  version 0.2
+     *  Now there is effectively no difference between configuration and execution node, but we are keeping this structure
+     *  for future requirements
+     *
      */
 
-    public void processGraph(TreeNode rootNode) {
+    public void processGraph(TreeNode rootNode, String projectDir) {
         log.info("Starting simulation...");
         Stack<TreeNode> globalStack = new Stack<>();
         Stack<TreeNode> configStack = new Stack<>();
@@ -128,7 +133,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
             }
             if(getNodeExecutionType(current.data.getType()).equals(SysConstants.CONFIGURATION) && !processedNodes.contains(current.data.id)) {
-                processConfigurationNode(current);
+                processConfigurationNode(current, projectDir);
                 processedNodes.add(current.data.id);
             }
 
@@ -147,17 +152,17 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
         // Process configuration nodes
         while (!configStack.isEmpty()) {
             TreeNode currentConfigNode = configStack.pop();
-            processExecutionNode(currentConfigNode);
+            processExecutionNode(currentConfigNode, projectDir);
         }
     }
 
 
-    private void processExecutionNode(TreeNode node) {
+    private void processExecutionNode(TreeNode node, String projectDir) {
         // Process execution node
         System.out.println("Processing execution node: " + node.data);
         CanvasObject object = node.data;
         log.info("type is :: {}, \n object :: {}",  object.getType(), object);
-        if(Objects.equals(object.type, "rest")){
+        if(Objects.equals(object.type, "restInterface")){
             // generate code for rest
             RestComponent restComponent = RestComponent
                     .builder()
@@ -173,11 +178,11 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
             String generatedCode = restComponent.generateCode();
 
-            codeWriterService.writeToFile(generatedCode, "rest");
+            codeWriterService.writeToFile(generatedCode, "restInterface", projectDir);
             log.info("Generated Code for rest {} ", generatedCode);
 
         }
-        if(Objects.equals(object.type, "func")){
+        if(Objects.equals(object.type, "function")){
             // generate code for func
             FunctionComponent functionComponent = FunctionComponent
                     .builder()
@@ -192,12 +197,12 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
             String functionCode = functionComponent.generateCode();
             log.info("Generated Code for function:: {} ", functionCode);
-            codeWriterService.writeToFile(functionCode, "function");
-            log.info("Generated Code for function {} ", functionCode);
+            codeWriterService.writeToFile(functionCode, "function", projectDir);
+
         }
     }
 
-    private void processConfigurationNode(TreeNode node) {
+    private void processConfigurationNode(TreeNode node, String projectDir) {
         // Process configuration node
         System.out.println("Processing configuration node: " + node.data);
         CanvasObject object = node.data;
@@ -209,7 +214,8 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
                     .tableDefinitions(object.tableDefinitions)
                     .build();
 
-            databaseComponent.generateCode();
+           String tableDefs = databaseComponent.generateCode();
+           codeWriterService.writeToConfigFiles(tableDefs, "database", projectDir);
             log.info("Configured Database");
         }
         if(Objects.equals(object.type, "queue")){
@@ -218,10 +224,10 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
             QueueComponent queueComponent = QueueComponent
                     .builder()
                     .topic(object.topic)
-                    .kafkaAdmin(kafkaAdmin)
                     .build();
 
-            queueComponent.configureQueue();
+            String topic = queueComponent.generateQueue();
+            codeWriterService.writeToConfigFiles(topic,"queue", projectDir);
             log.info("Configured queue component {} ", queueComponent);
         }
         if(Objects.equals(object.type, "input")){
@@ -229,6 +235,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
             InputComponent inputComponent = InputComponent
                     .builder()
                     .customTypes(object.customTypes)
+                    .outputClassDirectory(projectDir)
                     .build();
             inputComponent.generateCode();
             log.info("Configured input component {} ", inputComponent);
