@@ -305,6 +305,7 @@ public class ProjectService{
         if(!user.isPresent()){
             // raise exception and catch it to throw error
         }
+        if(newProjectState.getCanvasData()!=null)
         canvasDataRepository.save(newProjectState.getCanvasData());
 //        Optional<User> optionalUser = userRepository.findById(user.get().getId());
         if (user.isPresent()) {
@@ -323,8 +324,9 @@ public class ProjectService{
                // existingProject.setProjectName(newProjectState.getProjectName());
                 existingProject.setImageURL(newProjectState.getImageURL());
                 existingProject.setConfigurations(newProjectState.getConfigurations());
+                if(newProjectState.getCanvasData()!=null)
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
-                existingProject.setConfigurations(newProjectState.getConfigurations());
+//                existingProject.setConfigurations(newProjectState.getConfigurations());
                 // Update other properties as needed
 
                 // Save the updated project
