@@ -44,11 +44,11 @@ public class RestComponent implements CodeComponent {
         // Generate code to create a REST API in a Spring Boot application with multiple properties
         StringBuilder codeBuilder = new StringBuilder();
 
-        codeBuilder.append("    @Autowired").append("\n");
-        codeBuilder.append("    private CustomCodeService myService;").append("\n");
+//        codeBuilder.append("    @Autowired").append("\n");
+//        codeBuilder.append("    private CustomCodeService myService;").append("\n");
         codeBuilder.append("\n");
         codeBuilder.append("    @").append(httpMethod).append("(\"").append(requestUrl).append("\")").append("\n");
-        codeBuilder.append("    public ResponseEntity<?> ").append("StaticNameForEndpoint").append("(");
+        codeBuilder.append("    public ResponseEntity<?> ").append(requestUrl.replaceAll("[^A-Za-z]", "")).append("(");
 
         // Generate code for headers
         if (headers != null && !headers.isEmpty()) {

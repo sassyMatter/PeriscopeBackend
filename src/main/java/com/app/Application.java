@@ -12,7 +12,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
-@ComponentScan("com.app")
+@ComponentScan("com.app.*")
 @EnableMongoRepositories
 // @EnableAutoConfiguration(exclude={MongoAutoConfiguration.class})
 public class Application {

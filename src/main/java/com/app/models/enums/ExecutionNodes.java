@@ -3,8 +3,8 @@ package com.app.models.enums;
 import java.util.Arrays;
 
 public enum ExecutionNodes {
-    REST("rest"),
-    FUNCTION("func"),
+    REST("restInterface"),
+    FUNCTION("function"),
     INVALID("invalid");
 
     private final String value;

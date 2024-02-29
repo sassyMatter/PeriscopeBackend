@@ -19,8 +19,8 @@ com:
     jwtExpirationTime: 8460000
 
   userSpace:
-    templateDirectory: /templates
-    targetParentDirectory: /user-space-directory
+    templateDirectory: /templates/Template
+    targetParentDirectory: /user-space-directory/
     llmDirectory: /model-directory
 
 
