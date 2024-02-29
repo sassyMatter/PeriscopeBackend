@@ -18,8 +18,7 @@ public class CodeWriterService {
 
 
     @Value("${com.userSpace.targetParentDirectory}")
-    public static String targetParentDir;
-
+    public  String targetParentDir;
     /**
      * This will be used to write code to the user project template
      *
@@ -33,19 +32,19 @@ public class CodeWriterService {
 
             switch (type) {
                 case "restInterface":
-                    filePath = projectDir + "/src/main/java/com/app/controllers/UserEndpoint.java";
+                    filePath = targetParentDir + projectDir + "/src/main/java/com/app/controllers/UserEndpoints.java";
                     break;
                 case "function":
-                    filePath = projectDir + "/src/main/java/com/app/services/CustomCodeService.java";
+                    filePath = targetParentDir + projectDir + "/src/main/java/com/app/services/CustomCodeService.java";
                     break;
                 case "input":
-                    filePath = projectDir + "src/main/java/com/app/models/customModels";
+                    filePath = targetParentDir + projectDir + "/src/main/java/com/app/models/customModels";
                     break;
                 case "queue":
-                    filePath = projectDir + "src/main/resources";
+                    filePath = targetParentDir + projectDir + "/src/main/resources";
                     break;
                 case "database":
-                    filePath = projectDir + "src/main/resources";;
+                    filePath = targetParentDir + projectDir + "/src/main/resources";;
                     break;
                 default:
                     // Handle the default case if needed
@@ -88,13 +87,13 @@ public class CodeWriterService {
 
             switch (type) {
                 case "input":
-                    filePath = projectDir + "src/main/java/com/app/models/customModels";
+                    filePath = targetParentDir + projectDir + "/src/main/java/com/app/models/customModels";
                     break;
                 case "queue":
-                    filePath = projectDir + "src/main/resources/kafka_config.txt";
+                    filePath = targetParentDir + projectDir + "/src/main/resources/scripts/kafka_config.txt";
                     break;
                 case "database":
-                    filePath = projectDir + "src/main/resources/initializer.sql";;
+                    filePath = targetParentDir + projectDir + "/src/main/resources/scripts/initializer.sql";;
                     break;
                 default:
                     // Handle the default case if needed

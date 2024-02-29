@@ -4,7 +4,7 @@ import com.app.services.interfaces.CodeComponent;
 import com.app.utils.UtilityClass;
 import lombok.*;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
+//import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -38,7 +38,7 @@ public class InputComponent implements CodeComponent {
         customTypes.forEach((type, json) -> {
             try {
                 log.info("Creating types :: {} from {}", type, json);
-                UtilityClass.convertJsonToJavaClass(json, new File(outputClassDirectory + "src/main/java/com/app/models/customModels"), UtilityClass.PACKAGE_NAME, type);
+                UtilityClass.convertJsonToJavaClass(json, new File(outputClassDirectory + "/src/main/java/"), UtilityClass.PACKAGE_NAME, type);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

@@ -14,6 +14,7 @@ import com.app.utils.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaAdmin;
@@ -47,6 +48,10 @@ public class CanvasController {
 
     @Autowired
     KafkaTemplate kafkaTemplate;
+
+
+    @Value("${com.userSpace.targetParentDirectory}")
+    public  String targetParentDir;
 
     @PostMapping("/post-canvas-data")
     public Response PostCanvasData(@RequestBody Project project){
@@ -96,9 +101,21 @@ public class CanvasController {
      */
     @PostMapping("/run-project-test")
     public Response RunProjectTest(@RequestBody Project project){
+        log.info("Starting simulation with project {} ", project);
+        CanvasData canvasData  = project.getCanvasData();
+        String projectDir = project.getSourceDir();
+
+
+        log.info("Sources directory is {} ", projectDir);
+        log.info("Parent directory is {} ", targetParentDir);
+
+        TreeNode root = treeBuilderService.buildTree(canvasData);
+        treeBuilderService.processGraph(root, projectDir);
 
         return null;
     }
+
+
 
 
     @PostMapping("/test")
