@@ -34,8 +34,11 @@ public class DatabaseComponent implements CodeComponent {
     @Override
     public String generateCode() {
         // Execute DDL statements using JdbcTemplate
+        StringBuilder tables = new StringBuilder("");
+        for(String table : tableDefinitions) {
+            tables.append(table);
+        }
 
-
-        return tableDefinitions.toString();
+        return tables.toString();
     }
 }

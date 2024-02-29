@@ -13,7 +13,7 @@ import java.io.IOException;
 public class UtilityClass {
 
     public static File OUTPUT_CLASS_DIRECTORY = new File("src/main/java");
-    public static String PACKAGE_NAME = "com.app.models.customModels";
+    public static String PACKAGE_NAME = "com.app.models";
 
     public static void convertJsonToJavaClass(String json, File outputJavaClassDirectory, String packageName, String javaClassName)
             throws IOException {

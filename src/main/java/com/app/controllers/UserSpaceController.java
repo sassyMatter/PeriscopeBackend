@@ -62,14 +62,25 @@ public class UserSpaceController{
     }
 
 
-    @PostMapping("/load-project")
-    public ResponseEntity<?> loadProject(@RequestBody ProjectData projectData) {
+    @PostMapping("/run-project")
+    public ResponseEntity<?> runProject(@RequestBody ProjectData projectData) {
         // Load project based on provided ProjectData
        
         // Implement logic to load project from the database
         return ResponseEntity.ok("Project loaded successfully");
         // return projectService.loadProject(projectData);
     }
+
+
+    @PostMapping("/build-project")
+    public ResponseEntity<?> buildProject(@RequestBody Project project) {
+        // Load project based on provided ProjectData
+
+        // Implement logic to load project from the database
+        return ResponseEntity.ok("Project built successfully");
+        // return projectService.loadProject(projectData);
+    }
+
 
     // redundant
 
@@ -92,8 +103,6 @@ public class UserSpaceController{
         }
 //
 //
-
-
         log.info("Existing project:: {} ", existingProject);
         if (existingProject != null) {
             // If the project already exists, update its state

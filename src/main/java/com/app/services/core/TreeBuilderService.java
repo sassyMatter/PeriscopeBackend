@@ -11,6 +11,7 @@ import com.app.utils.SysConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.EnumUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaAdmin;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,8 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
     @Autowired
     KafkaAdmin kafkaAdmin;
 
+    @Value("${com.userSpace.targetParentDirectory}")
+    public  String targetParentDir;
     @Override
     public TreeNode buildTree(CanvasData objects){
 
@@ -232,10 +235,11 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
         }
         if(Objects.equals(object.type, "input")){
             log.info("Creating input component...");
+            log.info("target parent directory {} ", targetParentDir);
             InputComponent inputComponent = InputComponent
                     .builder()
                     .customTypes(object.customTypes)
-                    .outputClassDirectory(projectDir)
+                    .outputClassDirectory(targetParentDir + projectDir)
                     .build();
             inputComponent.generateCode();
             log.info("Configured input component {} ", inputComponent);
@@ -246,6 +250,7 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
         if(EnumUtils.isValidEnum(ExecutionNodes.class,  ExecutionNodes.getByValue(type).name())){
 //            log.info("Execution Node :: {} ", type , " value::  " + ExecutionNodes.getByValue(type).name());
+            log.info("type:: {} ", type);
             log.info("Execution Node real value :: {} ",  ExecutionNodes.getByValue(type).name());
             if(!ExecutionNodes.getByValue(type).name().equals("INVALID")) {
                 return SysConstants.EXECUTION;
