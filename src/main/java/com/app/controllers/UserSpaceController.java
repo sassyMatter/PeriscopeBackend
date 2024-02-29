@@ -81,32 +81,23 @@ public class UserSpaceController{
         String userName = userDetailsService.getCurrentUsername();
         Project updatedProject = null;
         log.info("UserName {}", userName);
-
-
         Project existingProject = null;
-//        Optional<String> projectId = Optional.ofNullable(project.getId());
-        Optional<String> projectName=Optional.ofNullable(project.getProjectName());
-        if(projectName.isPresent()){
-            existingProject = projectService.findProjectNameAndUser(userName, project.getProjectName());
-//            log.info("Existing project_working:: {} ", existingProject);
-        }
+//        Optional<String> projectName=Optional.ofNullable(project.getProjectName());
+//        if(projectName.isPresent()){
+//            existingProject = projectService.findProjectNameAndUser(userName, project.getProjectName());
+//        }
 //
 //
-
 
         log.info("Existing project:: {} ", existingProject);
         if (existingProject != null) {
-            // If the project already exists, update its state
-//            log.info("Updating the project ");
+//           projectService.deleteProject(userName,existingProject);
 
-           log.info("deleting the project");
-           projectService.deleteProject(userName,existingProject);
-
-           log.info("deleted");
+//           log.info("deleted");
        }
 
             // If the project doesn't exist, create and save a new project
-            log.info("projects ,{}",project);
+//            log.info("projects ,{}",project);
             Project savedProject = projectService.createProjectForUser(userName, project);
             // put null check for saved project
 
@@ -123,7 +114,7 @@ public class UserSpaceController{
 
         return MetaDataResponse.<Project>
                         builder()
-                .data(updatedProject)
+                .data(null)
                 .httpStatus(HttpStatus.BAD_REQUEST)
                 .messageCode("Project not valid")
                 .build();
@@ -131,7 +122,7 @@ public class UserSpaceController{
     @PostMapping("/update-project")
     public MetaDataResponse<Project> updateProject(@RequestBody Project project){
         String userName = userDetailsService.getCurrentUsername();
-        log.info("username{},",userName);
+//        log.info("username{},",userName);
         Project savedproject=projectService.updateProjectState(userName,project.getProjectName(),project);
         if(savedproject!=null) {
             return MetaDataResponse.<Project>
@@ -149,9 +140,9 @@ public class UserSpaceController{
         String userName = userDetailsService.getCurrentUsername();
 
         Project existingProject = null;
-        Optional<String> projectId = Optional.ofNullable(project.getProjectName());
-        log.info("projectId {}",projectId);
-        if(projectId.isPresent()){
+        Optional<String> projectName = Optional.ofNullable(project.getProjectName());
+        log.info("projectId {}",projectName);
+        if(projectName.isPresent()){
             existingProject = projectService.findProjectNameAndUser(userName, project.getProjectName());
         }
         log.info("existing project {}",existingProject);
@@ -178,6 +169,4 @@ public class UserSpaceController{
         }
 
     }
-
-
 }
