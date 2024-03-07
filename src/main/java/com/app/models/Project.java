@@ -31,6 +31,8 @@ public class Project {
 
     private boolean isRunning;
 
+    private RunningConfigurations runningConfigurations;
+
 
     @DBRef
     private CanvasData canvasData;
