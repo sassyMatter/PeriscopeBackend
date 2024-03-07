@@ -84,6 +84,9 @@ public class Project {
     public void setRunning(boolean running) {
         isRunning = running;
     }
+    public boolean getRunning(){
+        return isRunning;
+    }
 
     public String getId() {
         return id;

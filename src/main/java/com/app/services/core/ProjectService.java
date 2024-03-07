@@ -142,7 +142,7 @@ public class ProjectService{
 
             log.info("project {}",project.getId());
             if( removed ) {
-                String sourcedir="/user-space-directory/"+project.getSourceDir();
+                String sourcedir=project.getSourceDir();
                 log.info("getting project source dir,{}",sourcedir);
                 log.info("sourcedir {}",project.getSourceDir());
                 int x=scriptService.deleteUserProjectDirectory(sourcedir);
@@ -356,5 +356,31 @@ public class ProjectService{
             }
         }
         return null;
+    }
+    public void createDeleteDirectory(Project project){
+        String dirName=project.getSourceDir();
+        log.info("dirName {}",dirName);
+        int x=scriptService.deleteUserProjectDirectory(dirName);
+        if(x==1){
+            log.info("project deleted from directory");
+            log.info("working");
+//            String targetDirName="/user-space-directory/"+dirName;
+//            log.info("targetDirName {}",targetDirName);
+            int y=scriptService.createUserProjectDirectory(dirName);
+            if(y==1){
+                log.info("directory created");
+            }
+            else{
+                log.info("project directory not created after deleting for building project");
+            }
+        }
+        else{
+            int y=scriptService.createUserProjectDirectory(dirName);
+            if(y==1){
+                log.info("directory not deleted but created");
+            }
+
+        }
+
     }
 }

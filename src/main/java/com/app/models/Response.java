@@ -9,4 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 public class Response {
     String response;
+
+    public static Response ok() {
+            return  null;
+    }
 }

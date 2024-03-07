@@ -35,10 +35,11 @@ public class DatabaseComponent implements CodeComponent {
     public String generateCode() {
         // Execute DDL statements using JdbcTemplate
         StringBuilder tables = new StringBuilder("");
+
         for(String table : tableDefinitions) {
             tables.append(table);
         }
-
+        log.info("tables coming{}",tables);
         return tables.toString();
     }
 }
