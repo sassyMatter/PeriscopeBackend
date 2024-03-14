@@ -205,9 +205,11 @@ public class ProjectService{
 
 
     public Project createProjectForUser(String username, Project project) {
+
         log.info("Creating Project for User with user Id:: {} ", username);
         User user = userRepository.findByUsername(username).orElse(null);
         log.info("user {}",user);
+//        log.info("running configurations {}",project.getRunningConfigurations());
         if (user != null) {
             // Generate a predictable yet unique project name (e.g., appending timestamp)
 //            String projectName = generateUniqueProjectName(user.getUsername(), project.getProjectName());
@@ -217,6 +219,7 @@ public class ProjectService{
             String dirName = username + "-" + project.getProjectName();
             log.info("sourcedir:{}", dirName);
             project.setSourceDir(dirName);
+            project.setUrl("https://google.co.in/");
             int x=scriptService.createUserProjectDirectory(dirName);
             System.out.println(x);
             if(x==1){
@@ -227,6 +230,8 @@ public class ProjectService{
             }
 //          project.setCanvasData(new CanvasData());
             //project repo not implemented
+//            project.setRunningConfigurations(project.getRunningConfigurations());
+
             if(project.getCanvasData() != null){
                 canvasDataRepository.save(project.getCanvasData());
             }
@@ -348,6 +353,7 @@ public class ProjectService{
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
                 existingProject.setConfigurations(newProjectState.getConfigurations());
                 // Update other properties as needed
+                existingProject.setUrl("https://google.co.in");
 
                 // Save the updated project
                     Project saved;

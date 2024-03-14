@@ -38,7 +38,8 @@ public class Project {
     private CanvasData canvasData;
 
     // Constructors, getters, and setters
-
+    @Getter @Setter
+    private String url;
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;

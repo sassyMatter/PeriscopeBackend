@@ -23,6 +23,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -217,32 +218,32 @@ public class UserSpaceController{
         }
 
     }
-    @PostMapping("/run-project-test")
-    public MetaDataResponse<Project> RunProjectTest(@RequestBody Project project){
-        log.info("project info {}",project);
-        log.info("Starting simulation with project {} ", project);
-        CanvasData canvasData  = project.getCanvasData();
-        String projectDir = project.getSourceDir();
-        projectService.createDeleteDirectory(project);
-
-        log.info("Sources directory is {} ", projectDir);
-        log.info("Parent directory is {} ", targetParentDir);
-
-
-        TreeNode root = treeBuilderService.buildTree(canvasData);
-
-        treeBuilderService.processGraph(root, projectDir);
-        String message="project";
-
-//        return null;
-
-        return MetaDataResponse.<Project>
-                        builder()
-                .data(null)
-                .httpStatus(HttpStatus.OK)
-                .messageCode("Project built successfully for User")
-                .build();
-    }
+//    @PostMapping("/run-project-test")
+//    public MetaDataResponse<Project> RunProjectTest(@RequestBody Project project){
+//        log.info("project info {}",project);
+//        log.info("Starting simulation with project {} ", project);
+//        CanvasData canvasData  = project.getCanvasData();
+//        String projectDir = project.getSourceDir();
+//        projectService.createDeleteDirectory(project);
+//
+//        log.info("Sources directory is {} ", projectDir);
+//        log.info("Parent directory is {} ", targetParentDir);
+//
+//
+//        TreeNode root = treeBuilderService.buildTree(canvasData);
+//
+//        treeBuilderService.processGraph(root, projectDir);
+//        String message="project";
+//
+////        return null;
+//
+//        return MetaDataResponse.<Project>
+//                        builder()
+//                .data(null)
+//                .httpStatus(HttpStatus.OK)
+//                .messageCode("Project built successfully for User")
+//                .build();
+//    }
 
     @PostMapping("/build-project-test")
     public MetaDataResponse<Project> buildProjectTest(@RequestBody String projectname){
@@ -288,4 +289,26 @@ public class UserSpaceController{
 
 
     }
+    @GetMapping("/running-project")
+    public MetaDataResponse<List<Project>> runningProjects() {
+        String currUsername = userDetailsService.getCurrentUsername();
+//        List<ProjectData> projectData = projectMapper.mapToProjectDataList(allprojectsData);
+        // String userName = userDetailsService.getCurrentUsername();
+        log.info("running");
+        List<Project> userProjects = userDetailsService.getUserProjects(currUsername);
+        List<Project>runningProjects=new ArrayList<>();
+        for(Project pro:userProjects){
+            if(pro.isRunning()){
+                runningProjects.add(pro);
+            }
+        }
+        return MetaDataResponse.<List<Project>>
+                        builder()
+                .data(runningProjects)
+                .httpStatus(HttpStatus.OK)
+                .messageCode("SUCCESS")
+                .build();
+    }
+
+
 }

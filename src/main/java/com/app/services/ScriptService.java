@@ -65,7 +65,7 @@ public class ScriptService {
             command.add(targetParentDir);
             command.add("-n");
             command.add(targetDirName);
-
+//
 
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             processBuilder.inheritIO(); // Redirect process output to console
@@ -73,7 +73,6 @@ public class ScriptService {
             Process process = processBuilder.start();
             log.info("process, {}",process);
             int exitCode = process.waitFor();
-
             if (exitCode == 0) {
                 System.out.println("Project Template creation success.");
                 return 1;
