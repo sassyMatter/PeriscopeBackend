@@ -55,9 +55,9 @@ public class ScriptService {
             log.info("running");
             log.info(script.getPath());
             command.add("bash");
-            log.info("running2");
+
             command.add(script.getPath()); // Name of the Bash script
-            log.info("running2");
+
             // Add command-line arguments
             command.add("-s");
             command.add(sourceDir);
@@ -65,7 +65,7 @@ public class ScriptService {
             command.add(targetParentDir);
             command.add("-n");
             command.add(targetDirName);
-            log.info("running2");
+//
 
             ProcessBuilder processBuilder = new ProcessBuilder(command);
             processBuilder.inheritIO(); // Redirect process output to console
@@ -73,7 +73,6 @@ public class ScriptService {
             Process process = processBuilder.start();
             log.info("process, {}",process);
             int exitCode = process.waitFor();
-
             if (exitCode == 0) {
                 System.out.println("Project Template creation success.");
                 return 1;
@@ -92,6 +91,8 @@ public class ScriptService {
      * delete project on any update and recreate it with requirements
      */
     public int deleteUserProjectDirectory(String targetParentDir){
+        targetParentDir="/user-space-directory/"+targetParentDir;
+        log.info("targetParentDir");
         try {
             List<String> command = new ArrayList<>();
             File script = getScriptFile("delete_user_directory.sh");

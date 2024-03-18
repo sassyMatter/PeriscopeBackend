@@ -1,6 +1,7 @@
 package com.app.services.core;
 
 import com.app.models.Project;
+import com.app.models.RunningConfigurations;
 import com.app.models.account.User;
 import com.app.models.canvas.CanvasData;
 import com.app.repository.CanvasRepository;
@@ -26,6 +27,8 @@ public class ProjectService{
     private CanvasRepository canvasDataRepository;
     @Autowired
     ScriptService scriptService;
+
+
 
     /**
      *
@@ -102,14 +105,14 @@ public class ProjectService{
 
     /**
      *
-//     * @param projectId
+     //     * @param projectId
      */
     // Delete a project
     public void deleteProject(String username,Project project) {
         // find user and User object
         User user = userRepository.findByUsername(username).orElse(null);
 //         Project project=projectRepository.findById(projectId).orElse(null);
-        
+
         // delete project reference and
         assert user != null;
         if(user.getProjects()!=null) {
@@ -142,17 +145,25 @@ public class ProjectService{
 
             log.info("project {}",project.getId());
             if( removed ) {
-                String sourcedir="/user-space-directory/"+project.getSourceDir();
+                String sourcedir=project.getSourceDir();
                 log.info("getting project source dir,{}",sourcedir);
-//                log.info("sourcedir {}",project.getSourceDir());
+                log.info("sourcedir {}",project.getSourceDir());
                 int x=scriptService.deleteUserProjectDirectory(sourcedir);
                 if(x==1){
                     log.info("project deleted from directory");
+                    log.info("working");
                 }
                 else{
                     log.info("project not deleted from directory");
                 }
-                projectRepository.deleteById(project.getId());
+                //build nai ho rha backend
+                if(project.getCanvasData()!=null){
+                    canvasDataRepository.deleteById((project.getCanvasData().getId()));
+                }
+                log.info("{} ,{}",project.getId(), deleted.getId());
+
+                projectRepository.deleteById(deleted.getId());
+                log.info("project repo");
                 user.getProjects().remove(deleted);
                 log.info("project removed");
                 userRepository.save(user);
@@ -197,9 +208,11 @@ public class ProjectService{
 
 
     public Project createProjectForUser(String username, Project project) {
+
         log.info("Creating Project for User with user Id:: {} ", username);
         User user = userRepository.findByUsername(username).orElse(null);
         log.info("user {}",user);
+//        log.info("running configurations {}",project.getRunningConfigurations());
         if (user != null) {
             // Generate a predictable yet unique project name (e.g., appending timestamp)
 //            String projectName = generateUniqueProjectName(user.getUsername(), project.getProjectName());
@@ -209,6 +222,8 @@ public class ProjectService{
             String dirName = username + "-" + project.getProjectName();
             log.info("sourcedir:{}", dirName);
             project.setSourceDir(dirName);
+            project.setUrl("https://google.co.in/");
+
             int x=scriptService.createUserProjectDirectory(dirName);
             System.out.println(x);
             if(x==1){
@@ -219,10 +234,13 @@ public class ProjectService{
             }
 //          project.setCanvasData(new CanvasData());
             //project repo not implemented
+//            project.setRunningConfigurations(project.getRunningConfigurations());
+
+
             if(project.getCanvasData() != null){
                 canvasDataRepository.save(project.getCanvasData());
             }
-            
+
             project.setSourceDirName(project.getProjectName());
 
             log.info("last");
@@ -306,9 +324,14 @@ public class ProjectService{
             // raise exception and catch it to throw error
         }
         if(newProjectState.getCanvasData()!=null)
-        canvasDataRepository.save(newProjectState.getCanvasData());
+        //if new project canvas data is not null
+//        if(newProjectState.getCanvasData()!=null){
+//            canvasDataRepository.save(newProjectState.getCanvasData());
+//        }
+
 //        Optional<User> optionalUser = userRepository.findById(user.get().getId());
         if (user.isPresent()) {
+            log.info("coming");
             log.info("user {}",user);
             log.info("projectName {}",newProjectState);
             User existingUser = user.get();
@@ -319,20 +342,58 @@ public class ProjectService{
 
             if (optionalProject.isPresent()) {
                 Project existingProject = optionalProject.get();
+                if(existingProject.getCanvasData()!=null){
+                    log.info("deleted");
+                    canvasDataRepository.deleteById(existingProject.getCanvasData().getId());
+                }
+                if(newProjectState.getCanvasData()!=null){
+                    canvasDataRepository.save(newProjectState.getCanvasData());
 
+                }
                 // Update the properties of the existing project with the new state
-               // existingProject.setProjectName(newProjectState.getProjectName());
+                // existingProject.setProjectName(newProjectState.getProjectName());
+                //deleting project repo
+                projectRepository.deleteById(existingProject.getId());
                 existingProject.setImageURL(newProjectState.getImageURL());
                 existingProject.setConfigurations(newProjectState.getConfigurations());
                 if(newProjectState.getCanvasData()!=null)
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
 //                existingProject.setConfigurations(newProjectState.getConfigurations());
                 // Update other properties as needed
+                existingProject.setUrl("https://google.co.in");
 
                 // Save the updated project
-              return  projectRepository.save(existingProject);
+                    Project saved;
+                saved = projectRepository.save(existingProject);
+                return saved;
             }
         }
         return null;
+    }
+    public void createDeleteDirectory(Project project){
+        String dirName=project.getSourceDir();
+        log.info("dirName {}",dirName);
+        int x=scriptService.deleteUserProjectDirectory(dirName);
+        if(x==1){
+            log.info("project deleted from directory");
+            log.info("working");
+//            String targetDirName="/user-space-directory/"+dirName;
+//            log.info("targetDirName {}",targetDirName);
+            int y=scriptService.createUserProjectDirectory(dirName);
+            if(y==1){
+                log.info("directory created");
+            }
+            else{
+                log.info("project directory not created after deleting for building project");
+            }
+        }
+        else{
+            int y=scriptService.createUserProjectDirectory(dirName);
+            if(y==1){
+                log.info("directory not deleted but created");
+            }
+
+        }
+
     }
 }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 
-
 @Component
 @Builder
 @Setter
@@ -35,6 +34,7 @@ public class InputComponent implements CodeComponent {
     @Override
     public String generateCode() {
         log.info("Generating input component...");
+
         customTypes.forEach((type, json) -> {
             try {
                 log.info("Creating types :: {} from {}", type, json);

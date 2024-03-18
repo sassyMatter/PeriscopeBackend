@@ -10,8 +10,14 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 
 public class MapDeserializer extends StdDeserializer<Map<String, String>> {
+    //remove after testing
+    private static final Logger log = LoggerFactory.getLogger(MapDeserializer.class);
     public MapDeserializer() {
         this(null);
     }
@@ -29,7 +35,7 @@ public class MapDeserializer extends StdDeserializer<Map<String, String>> {
         ObjectMapper mapper = (ObjectMapper) jsonParser.getCodec();
         JsonNode node = mapper.readTree(jsonParser);
         Map<String, String> map = new HashMap<>();
-
+        log.info(map.toString());
         if (node.isObject() && node.has("dataType") && node.has("value")) {
             String dataType = node.get("dataType").asText();
             if (dataType.equals("Map")) {
@@ -41,6 +47,7 @@ public class MapDeserializer extends StdDeserializer<Map<String, String>> {
                             String key = entryNode.get(0).asText();
                             String value = entryNode.get(1).asText();
                             map.put(key, value);
+
                         }
                     }
                 }
