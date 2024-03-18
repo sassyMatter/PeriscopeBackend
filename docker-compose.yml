@@ -41,10 +41,11 @@ services:
 
   spring-app:
     container_name: backend
-    build:
-       context: .
-       dockerfile: Dockerfile
+    # build:
+    #    context: .
+    #    dockerfile: Dockerfile
 #    image: moonbse/backend:latest
+    image: periscope/backend
     platform: linux/amd64
     depends_on:
       - kafka
@@ -64,8 +65,8 @@ services:
 #    build:
 #      context: .
 #      dockerfile: Dockerfile
-#    image: periscope/hs_local:amd64_latest
-    image: moonbse/periscope-frontend:latest
+    image: periscope/hs_local
+    # image: moonbse/periscope-frontend:latest
 #    image: moonbse/periscope_frontend_local:amd64_local
     platform: linux/amd64
 

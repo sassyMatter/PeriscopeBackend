@@ -305,6 +305,7 @@ public class ProjectService{
         if(!user.isPresent()){
             // raise exception and catch it to throw error
         }
+        if(newProjectState.getCanvasData()!=null)
         canvasDataRepository.save(newProjectState.getCanvasData());
 //        Optional<User> optionalUser = userRepository.findById(user.get().getId());
         if (user.isPresent()) {
