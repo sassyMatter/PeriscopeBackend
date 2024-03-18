@@ -324,8 +324,9 @@ public class ProjectService{
                // existingProject.setProjectName(newProjectState.getProjectName());
                 existingProject.setImageURL(newProjectState.getImageURL());
                 existingProject.setConfigurations(newProjectState.getConfigurations());
+                if(newProjectState.getCanvasData()!=null)
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
-                existingProject.setConfigurations(newProjectState.getConfigurations());
+//                existingProject.setConfigurations(newProjectState.getConfigurations());
                 // Update other properties as needed
 
                 // Save the updated project
