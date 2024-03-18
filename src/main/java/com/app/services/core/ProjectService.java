@@ -1,6 +1,7 @@
 package com.app.services.core;
 
 import com.app.models.Project;
+import com.app.models.RunningConfigurations;
 import com.app.models.account.User;
 import com.app.models.canvas.CanvasData;
 import com.app.repository.CanvasRepository;
@@ -26,6 +27,8 @@ public class ProjectService{
     private CanvasRepository canvasDataRepository;
     @Autowired
     ScriptService scriptService;
+
+
 
     /**
      *
@@ -220,6 +223,7 @@ public class ProjectService{
             log.info("sourcedir:{}", dirName);
             project.setSourceDir(dirName);
             project.setUrl("https://google.co.in/");
+
             int x=scriptService.createUserProjectDirectory(dirName);
             System.out.println(x);
             if(x==1){
@@ -231,6 +235,7 @@ public class ProjectService{
 //          project.setCanvasData(new CanvasData());
             //project repo not implemented
 //            project.setRunningConfigurations(project.getRunningConfigurations());
+
 
             if(project.getCanvasData() != null){
                 canvasDataRepository.save(project.getCanvasData());

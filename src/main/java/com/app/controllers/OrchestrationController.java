@@ -11,11 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,8 +26,11 @@ import java.util.List;
 public class OrchestrationController {
     @Value("${com.userSpace.targetParentDirectory}")
     public  String targetParentDir;
-    @Value("${com.userSpace.templateDirectory}")
-    public String sourceDir;
+
+
+    @Value("${docker.compose.executable}")
+    private String dockerComposeExecutable;
+
     private static final Logger logg = LoggerFactory.getLogger(OrchestrationController.class);
     /**
      *
@@ -49,52 +48,96 @@ public class OrchestrationController {
      */
 
     @PostMapping("run-project")
-    public ResponseEntity<?> runProject(@RequestBody Project project) throws IOException {
-        log.info("project coming {}",project);
+    public ResponseEntity<?> runProject(@RequestBody Project project) throws IOException, InterruptedException {
+//        log.info("project coming {}",project);
         String src=project.getSourceDir();
-        log.info("Source directory {}",src);
+//        log.info("Source directory {}",src);
+//
+        String dockerComposeFile=targetParentDir + src+"/src/main/resources/scripts/initializer.sql";
+//
+//
+//        log.info("Directory {}",dockerComposeFile);
+//        String tempDir = System.getProperty("java.io.tmpdir");
+//        System.out.println("Temporary directory: " + tempDir);
+//        Path file = Path.of(dockerComposeFile);
+//
+//        String dockerfileContent = readDockerfile(dockerComposeFile);
+//        Path tempDockerComposePath = writeToTemporaryDockerComposeFile(dockerfileContent);
+////        log.info("dockerFileContent {}",dockerfileContent);
+////        writeDockerfile(dockerfileContent, dockerpath);
+//        bringUpContainers(tempDockerComposePath);
+        List<String> command = List.of("cat",dockerComposeFile);
+        ProcessBuilder processBuilder = new ProcessBuilder(command);
+//        processBuilder.directory(new File(dockerComposeFile));
+        // Step 2: Start the process
+        Process process = processBuilder.start();
 
-        String dockerComposeFile=targetParentDir + src+"/docker-compose.yml";
-        String dockerpath="../../../docker-compose2.yml";
-        log.info("Directory {}",dockerComposeFile);
-//        try (BufferedReader reader = new BufferedReader(new FileReader(dockerComposeFile))) {
-//            StringBuilder content = new StringBuilder();
-//            String line;
-//            while ((line = reader.readLine()) != null) {
-//                content.append(line).append(System.lineSeparator());
-//            }
-//            log.info("File content: {}",
-//                    content.toString());
-//        } catch (IOException e) {
-//            log.error("Error reading file: {}", e.getMessage());
-//        }
-//        String destpath="../../../docker-compose2.yml";
-        Path file = Path.of(dockerComposeFile);
-//        log.info("file:: {} ", file);
-        String dockerfileContent = readDockerfile(dockerComposeFile);
-//        log.info("dockerFileContent {}",dockerfileContent);
-        writeDockerfile(dockerfileContent, dockerpath);
-        try {
-            // Build the Docker image
-            ProcessBuilder buildProcess = new ProcessBuilder("docker", "build", "-t", "my-image", "-f", dockerpath, ".");
-            Process build = buildProcess.start();
-            build.waitFor();
-
-            // Run the Docker container
-            ProcessBuilder runProcess = new ProcessBuilder("docker", "run", "-d", "my-image");
-            Process run = runProcess.start();
-            run.waitFor();
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        // Step 3: Read the output
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+        String line;
+        while ((line = reader.readLine()) != null) {
+            System.out.println(line);
         }
+
+        // Wait for the process to complete
+        int exitCode = process.waitFor();
+        log.info("Exit code{}",exitCode);
+        System.out.println("Exit code: " + exitCode);
+
+
+//        List<String> listFilesCommand = List.of("pwd");
+//        ProcessBuilder listFilesProcessBuilder = new ProcessBuilder(listFilesCommand);
+//        listFilesProcessBuilder.directory(new File(dockerComposeFile));
+//        Process listFilesProcess = listFilesProcessBuilder.start();
+//
+//        BufferedReader listFilesReader = new BufferedReader(new InputStreamReader(listFilesProcess.getInputStream()));
+//        while ((line = listFilesReader.readLine()) != null) {
+//            System.out.println(line);
+//        }
+//
+//        int listFilesExitCode = listFilesProcess.waitFor();
+//        System.out.println("List files exit code: " + listFilesExitCode);
+
         return ResponseEntity.ok("Project loaded successfully");
     }
     public String readDockerfile(String sourcePath) throws IOException {
         return new String(Files.readAllBytes(Paths.get(sourcePath)));
     }
-    public void writeDockerfile(String content, String destinationPath) throws IOException {
-        Files.write(Paths.get(destinationPath), content.getBytes());
-        log.info(destinationPath);
+
+    public Path writeToTemporaryDockerComposeFile(String content) throws IOException {
+        Path tempFile = Files.createTempFile("docker-compose-", ".yml");
+        Files.write(tempFile, content.getBytes());
+        log.info("tempfile {}",tempFile);
+        return tempFile;
     }
+    public void bringUpContainers(Path dockerComposePath) throws IOException {
+        System.out.println("Docker Compose file path: " + dockerComposePath.toString());
+        String destPath=dockerComposePath.toString();
+        log.info("destPath{}",destPath);
+        String destContent=readDockerfile(destPath);
+        log.info("content {}",destContent);
+
+
+        if (!Files.exists(dockerComposePath)) {
+            System.out.println("Docker Compose file does not exist at the specified path.");
+        }
+        else{
+            log.info("dockercomposeexecutable {}",dockerComposeExecutable);
+            try {
+                ProcessBuilder processBuilder = new ProcessBuilder(dockerComposeExecutable,"-f", destPath, "up", "-d");
+
+
+                Process process = processBuilder.start();
+
+                process.waitFor();
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Docker Compose file exists at the specified path.");
+        }
+
+
+    }
+
 
 }
