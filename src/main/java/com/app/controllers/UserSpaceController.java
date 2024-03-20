@@ -73,35 +73,24 @@ public class UserSpaceController{
 
 
     @PostMapping("/run-project")
-    public MetaDataResponse<Project> runProject(@RequestBody String projectName) {
+    public MetaDataResponse<Project> runProject(@RequestBody String projectname) {
         // Load project based on provided ProjectData
         String username=userDetailsService.getCurrentUsername();
-        List<Project> userProjects = userDetailsService.getUserProjects(username);
+
         log.info("username {}",username);
-        Project project=null;
-        for(Project project1:userProjects){
-            if(project1.getProjectName().equals(projectName))
-                project=project1;
-        }
-        if(project!=null){
-            projectRepository.deleteById(project.getId());
-            boolean value=project.getRunning();
-            value=!value;
-            project.setRunning(value);
-            projectRepository.save(project);
-        }
+        Project project1=projectService.running(username,projectname);
 
-
-        log.info("running project");
-        // Implement logic to load project from the database
-//        return ResponseEntity.ok("Project loaded successfully");
-        // return projectService.loadProject(projectData);
         return MetaDataResponse.<Project>
                         builder()
-                .data(project)
+                .data(project1)
                 .httpStatus(HttpStatus.OK)
                 .messageCode("Project run successfully for User")
                 .build();
+
+
+        // Implement logic to load project from the database
+//        return ResponseEntity.ok("Project loaded successfully");
+        // return projectService.loadProject(projectData);
     }
 
 
@@ -122,6 +111,7 @@ public class UserSpaceController{
 
 //        Project project = projectMapper.mapProjectDataToProject(projectData);
 
+        log.info("last");
         String userName = userDetailsService.getCurrentUsername();
         Project updatedProject = null;
         log.info("UserName {}", userName);

@@ -222,7 +222,7 @@ public class ProjectService{
             String dirName = username + "-" + project.getProjectName();
             log.info("sourcedir:{}", dirName);
             project.setSourceDir(dirName);
-            project.setUrl("https://google.co.in/");
+            project.setUrl("https://www.youtube.com/");
 
             int x=scriptService.createUserProjectDirectory(dirName);
             System.out.println(x);
@@ -243,7 +243,6 @@ public class ProjectService{
 
             project.setSourceDirName(project.getProjectName());
 
-            log.info("last");
             Project savedProject =  projectRepository.save(project);
 
             try{
@@ -358,7 +357,7 @@ public class ProjectService{
                 existingProject.setCanvasData(newProjectState.getCanvasData()); // Replace the entire CanvasData
                 existingProject.setConfigurations(newProjectState.getConfigurations());
                 // Update other properties as needed
-                existingProject.setUrl("https://google.co.in");
+//                existingProject.setUrl("https://google.co.in");
 
                 // Save the updated project
                     Project saved;
@@ -393,5 +392,37 @@ public class ProjectService{
 
         }
 
+    }
+
+    public Project running(String username,String projectName){
+        Optional<User> user = userRepository.findByUsername(username);
+
+        log.info("user is present {}:", user.isPresent());
+//
+        if(user.isPresent()){
+            User existingUser = user.get();
+            // Find the project within the user's projects
+            Optional<Project> optionalProject = existingUser.getProjects().stream()
+                    .filter(project1 -> project1.getProjectName().equals(projectName))
+                    .findFirst();
+
+            if(optionalProject.isPresent()){
+
+                Project existingProject=optionalProject.get();
+                boolean isRunning;
+                //change its running status
+                isRunning = !existingProject.isRunning();
+                log.info("running status {}",isRunning);
+
+                existingProject.setRunning(isRunning);
+                existingProject.setCanvasData(existingProject.getCanvasData());
+                projectRepository.deleteById(existingProject.getId());
+                Project saved;
+                saved = projectRepository.save(existingProject);
+                return saved;
+            }
+
+        }
+        return null;
     }
 }

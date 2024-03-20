@@ -56,7 +56,7 @@ services:
     volumes:
       - ${TEMPLATE_DIR}:/templates
       - ${USER_SPACE_DIR}:/user-space-directory
-      - /Users/sangam.barnwal/Documents/Periscope/PeriscopeBackend/src/main/java/com/app/pipe:/hostpipe
+#      - /Users/sangam.barnwal/Documents/Periscope/PeriscopeBackend/src/main/java/com/app/pipe:/hostpipe
 
 #      - ${LLM_MODEL_DIR}:/model-directory
 
