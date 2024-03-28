@@ -47,12 +47,15 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
 
 
         for(int i = 0; i < treeNodes.size(); i++){
+            log.info("tree");
             TreeNode node = treeNodes.get(i);
             treeNodeMap.put(node.getData().getId(), node);
             if(Objects.equals(node.getData().getType(), "input")){
                 root = node;
             }
         }
+//        log.info("root {}",root);
+
 
         log.info("Tree node map :: {} ", treeNodeMap);
         for(int i = 0; i < treeNodes.size(); i++){
@@ -61,12 +64,18 @@ public class TreeBuilderService implements com.app.services.interfaces.TreeBuild
             log.info("creating for :: {}" , node);
             List<Connection> connections = node.data.getConnections();
             if(connections != null) {
-                connections.forEach(connection -> {
-                    node.addChild(treeNodeMap.get(connection.getId()));
-                });
+                log.info("connections {}",connections);
+
+                    connections.forEach(connection -> {
+                        node.addChild(treeNodeMap.get(connection.getId()));
+                    });
+
+
             }
 
         }
+//        log.info("data coming");
+//        log.info("root {}",root);
         return root;
     }
 

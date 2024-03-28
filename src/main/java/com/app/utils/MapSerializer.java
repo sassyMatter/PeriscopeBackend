@@ -15,7 +15,10 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import java.io.IOException;
 import java.util.Map;
 
+
 public class MapSerializer extends StdSerializer<Map<String, String>> {
+
+
     public MapSerializer() {
         this(null);
     }
@@ -32,6 +35,8 @@ public class MapSerializer extends StdSerializer<Map<String, String>> {
         // Set the dataType field
         node.put("dataType", "Map");
 
+
+
         // Convert the map to an array of key-value pairs
         ArrayNode valueNode = mapper.createArrayNode();
         for (Map.Entry<String, String> entry : map.entrySet()) {
@@ -42,7 +47,7 @@ public class MapSerializer extends StdSerializer<Map<String, String>> {
         }
 
         // Set the value field
-        node.set("value", valueNode);
+        node.set("value ", valueNode);
 
         mapper.writeValue(jsonGenerator, node);
     }

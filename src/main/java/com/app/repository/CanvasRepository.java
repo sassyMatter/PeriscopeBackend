@@ -10,4 +10,5 @@ public interface CanvasRepository extends MongoRepository<CanvasData,String> {
 
     CanvasData save(CanvasData data);
     List<CanvasData> findAll();
+
 }

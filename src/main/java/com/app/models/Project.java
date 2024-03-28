@@ -31,6 +31,7 @@ public class Project {
 
     private boolean isRunning;
 
+
     private RunningConfigurations runningConfigurations;
 
 
@@ -38,7 +39,8 @@ public class Project {
     private CanvasData canvasData;
 
     // Constructors, getters, and setters
-
+    @Getter @Setter
+    private String url;
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
@@ -86,6 +88,9 @@ public class Project {
     public void setRunning(boolean running) {
         isRunning = running;
     }
+    public boolean getRunning(){
+        return isRunning;
+    }
 
     public String getId() {
         return id;
@@ -94,4 +99,6 @@ public class Project {
     public void setId(String id) {
         this.id = id;
     }
+
+
 }
